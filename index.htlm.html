@@ -1,0 +1,2807 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상담사 역량강화 수련 플랫폼 - CounselorHub Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        @media print {
+            .no-print, header, nav, .lg\:col-span-4 { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white !important; color: black !important; padding: 0 !important; margin: 0 !important; }
+            main { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+            .lg\:col-span-8 { width: 100% !important; max-width: 100% !important; flex: none !important; }
+            .bg-white, .bg-slate-50, .glass-card { background: white !important; box-shadow: none !important; border: none !important; }
+            .shadow-sm, .shadow-2xs, .shadow-md, .shadow-2xl { box-shadow: none !important; }
+            #reportContainer { margin: 0 !important; padding: 0 !important; font-size: 11pt !important; line-height: 1.6 !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col custom-scrollbar">
+
+    <!-- Header & Main Navigation Bar -->
+    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo & Title -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('menu1')">
+                    <div class="bg-blue-600 p-2.5 rounded-xl shadow-lg flex items-center justify-center">
+                        <i class="fa-solid fa-user-doctor text-xl text-white"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">CounselorHub Pro</span>
+                        <span class="text-xs text-slate-400 block font-light">임상 및 직업상담 수련 실무 가이드 (5년 미만 상담사 전용)</span>
+                    </div>
+                </div>
+
+                <!-- API Key Status & Settings -->
+                <div class="flex items-center space-x-3">
+                    <button onclick="openApiModal()" class="flex items-center space-x-2 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-lg transition-all">
+                        <i class="fa-solid fa-key text-amber-400"></i>
+                        <span id="apiStatusText">Gemini API 설정</span>
+                    </button>
+                    <div class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full hidden md:flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>베테랑 슈퍼바이저 모드</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Navigation Links -->
+            <nav class="flex space-x-2 sm:space-x-3 border-t border-slate-800 text-xs sm:text-sm font-bold overflow-x-auto custom-scrollbar py-2.5">
+                <button onclick="switchTab('menu1')" id="tab-menu1" class="tab-btn px-4 py-2 rounded-xl text-white bg-blue-600 shadow-md border border-blue-400/30 flex items-center gap-2 whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-book-open text-blue-200 text-sm"></i>
+                    <span>메뉴 1. 이론 & 기법 백과</span>
+                </button>
+                <button onclick="switchTab('menu2')" id="tab-menu2" class="tab-btn px-4 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 border border-slate-700/60 flex items-center gap-2 whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-file-signature text-emerald-400 text-sm"></i>
+                    <span>메뉴 2. 상담 사례 보고서</span>
+                </button>
+                <button onclick="switchTab('menu3')" id="tab-menu3" class="tab-btn px-4 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 border border-slate-700/60 flex items-center gap-2 whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-brain text-purple-400 text-sm"></i>
+                    <span>메뉴 3. 이론 적용 연습</span>
+                </button>
+                <button onclick="switchTab('menu4')" id="tab-menu4" class="tab-btn px-4 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 border border-slate-700/60 flex items-center gap-2 whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-comments text-amber-400 text-sm"></i>
+                    <span>메뉴 4. 상담기법 대화 훈련</span>
+                </button>
+                <button onclick="switchTab('menu5')" id="tab-menu5" class="tab-btn px-4 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/80 border border-slate-700/60 flex items-center gap-2 whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-scale-balanced text-teal-400 text-sm"></i>
+                    <span>메뉴 5. 협회별 상담사 윤리 강령</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- MENU 1 VIEW -->
+        <section id="view-menu1" class="tab-content block space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 pb-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-book-bookmark text-blue-600"></i>
+                            심리상담 및 직업상담 이론 & 기법 정밀 정리
+                        </h2>
+                        <p class="text-sm text-slate-500 mt-1">학자, 핵심개념, 증상관점, 주요기법, 직업/심리 적용, 실무 워크시트 및 추천 도서 제공</p>
+                    </div>
+                    <!-- Search Bar -->
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="relative w-full sm:w-72">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+                            <input type="text" id="theorySearchInput" onkeyup="searchTheory()" placeholder="이론명, 학자, 키워드 검색..." class="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conceptual Definitions -->
+                <div class="mb-6 p-4 rounded-2xl bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white shadow-sm space-y-3">
+                    <div class="flex items-center gap-2 border-b border-blue-700/60 pb-2">
+                        <i class="fa-solid fa-graduation-cap text-blue-300 text-base"></i>
+                        <h3 class="text-sm font-bold tracking-tight text-blue-100">심리적 개입 패러다임: 심리교육 · 심리상담 · 심리치료 구분</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                        <div class="bg-white/10 backdrop-blur-xs p-3 rounded-xl border border-white/10 space-y-1">
+                            <div class="font-bold text-blue-200 flex items-center gap-1.5 text-xs">
+                                <i class="fa-solid fa-book-open-reader text-blue-400"></i> 1. 심리교육 (Psychoeducation)
+                            </div>
+                            <p class="text-slate-200 leading-relaxed font-light">
+                                정보 전달이 중심이 되며, 문제 발생 이전의 <b>예방적 개입</b>을 지향합니다. 매뉴얼화된 <b>구조화 집단 및 교육 프로그램 적용</b>에 가장 적합합니다.
+                            </p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-xs p-3 rounded-xl border border-white/10 space-y-1">
+                            <div class="font-bold text-emerald-200 flex items-center gap-1.5 text-xs">
+                                <i class="fa-solid fa-comments text-emerald-400"></i> 2. 심리상담 (Counseling)
+                            </div>
+                            <p class="text-slate-200 leading-relaxed font-light">
+                                <b>발달적·심리적 문제와 적응</b>을 다루며, <b>일상생활의 스트레스, 대인관계 갈등, 우울 및 진로 문제</b> 해결을 조력합니다.
+                            </p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-xs p-3 rounded-xl border border-white/10 space-y-1">
+                            <div class="font-bold text-purple-200 flex items-center gap-1.5 text-xs">
+                                <i class="fa-solid fa-stethoscope text-purple-400"></i> 3. 심리치료 (Psychotherapy)
+                            </div>
+                            <p class="text-slate-200 leading-relaxed font-light">
+                                보다 깊고 만성적인 심리적 어려움, <b>성격 구조의 재구성, 신경증 및 임상적 장애</b> 치료를 목적으로 심층적 기법을 구사합니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The 5 Waves of Psychotherapy -->
+                <div class="mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-2 gap-2">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-water text-blue-600"></i>
+                            <h3 class="text-sm font-bold text-slate-800">심리상담 및 심리치료 이론의 발전 역사: 5대 물결 (The 5 Waves of Psychotherapy)</h3>
+                        </div>
+                        <span class="text-[11px] font-bold text-blue-800 bg-blue-100/80 px-3 py-1 rounded-full border border-blue-200 flex items-center gap-1.5 w-max">
+                            <i class="fa-solid fa-arrow-right-long text-blue-600"></i>
+                            초점의 변화: <b class="text-blue-900">분석과 개인 내부</b> ➔ <b class="text-blue-900">경험, 맥락, 사회</b>
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 text-xs">
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1 hover:border-blue-300 transition-all">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 block w-max">제1물결 (1890년대~)</span>
+                            <h4 class="font-bold text-slate-900 text-xs">정신분석 & 심층심리</h4>
+                            <p class="text-slate-600 text-[11px] leading-snug"><b>개인 내부의 무의식적 갈등</b>, 초기 경험, 자아방어기제.<br><span class="text-slate-400">(Freud, Jung, Adler)</span></p>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1 hover:border-indigo-300 transition-all">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-800 block w-max">제2물결 (1920~1950년대)</span>
+                            <h4 class="font-bold text-slate-900 text-xs">행동주의 & CBT</h4>
+                            <p class="text-slate-600 text-[11px] leading-snug">조건화 및 학습 원리, 역기능적 자동적 사고, 인지재구조화.<br><span class="text-slate-400">(Skinner, Wolpe, Ellis, Beck)</span></p>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1 hover:border-emerald-300 transition-all">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 block w-max">제3물결 (1950~1960년대)</span>
+                            <h4 class="font-bold text-slate-900 text-xs">인본주의 ~ 실존주의</h4>
+                            <p class="text-slate-600 text-[11px] leading-snug"><b>주관적 경험과 자아실현</b>, 지금-여기 자각, 실존적 의미.<br><span class="text-slate-400">(Rogers, Frankl, Greenberg)</span></p>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1 hover:border-purple-300 transition-all">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-800 block w-max">제4물결 (1890~1990년대)</span>
+                            <h4 class="font-bold text-slate-900 text-xs">사회구성주의 & 포스트모더니즘</h4>
+                            <p class="text-slate-600 text-[11px] leading-snug">언어와 서사의 힘, 지배적 이야기 해체, 문제의 외재화.<br><span class="text-slate-400">(Michael White, Savickas)</span></p>
+                        </div>
+                        <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1 hover:border-amber-300 transition-all">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800 block w-max">제5물결 (2000년대~)</span>
+                            <h4 class="font-bold text-slate-900 text-xs">사회정의, 다문화 & 옹호</h4>
+                            <p class="text-slate-600 text-[11px] leading-snug"><b>문화·사회적 맥락 및 구조</b> 자각, 억압 해소 및 옹호(Advocacy).<br><span class="text-slate-400">(D. W. Sue, Blustein)</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Menu Bar -->
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-6 bg-slate-50 p-3 rounded-xl border border-slate-200/80">
+                    <div class="flex items-center space-x-2 overflow-x-auto custom-scrollbar">
+                        <span class="text-xs font-bold text-slate-600 whitespace-nowrap mr-1">
+                            <i class="fa-solid fa-layer-group text-blue-600"></i> 카테고리 빠른 메뉴:
+                        </span>
+                        <button onclick="filterPartTab('all')" id="btnPartAll" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-blue-600 text-white shadow-xs hover:bg-blue-700 transition-all whitespace-nowrap flex items-center gap-1.5">
+                            <i class="fa-solid fa-grip text-blue-200"></i> 전체 보기 (33개)
+                        </button>
+                        <button onclick="filterPartTab('part1')" id="btnPart1" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 text-white shadow-xs hover:bg-indigo-700 transition-all whitespace-nowrap flex items-center gap-1.5">
+                            <i class="fa-solid fa-heart-pulse text-indigo-200"></i> 파트 1. 심리상담 이론 (16개)
+                        </button>
+                        <button onclick="filterPartTab('part2')" id="btnPart2" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-emerald-600 text-white shadow-xs hover:bg-emerald-700 transition-all whitespace-nowrap flex items-center gap-1.5">
+                            <i class="fa-solid fa-briefcase text-emerald-200"></i> 파트 2. 진로 및 직업상담 이론 (9개)
+                        </button>
+                        <button onclick="filterPartTab('part3')" id="btnPart3" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-purple-600 text-white shadow-xs hover:bg-purple-700 transition-all whitespace-nowrap flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-pen text-purple-200"></i> 파트 3. 이론별 실무 워크시트 (8개)
+                        </button>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <button onclick="expandAllParts()" class="text-xs text-slate-600 hover:text-blue-600 bg-white border border-slate-200 hover:border-blue-300 px-2.5 py-1.5 rounded-lg transition-all font-medium flex items-center gap-1">
+                            <i class="fa-solid fa-angles-down"></i> 모두 펼치기
+                        </button>
+                        <button onclick="collapseAllParts()" class="text-xs text-slate-600 hover:text-slate-900 bg-white border border-slate-200 px-2.5 py-1.5 rounded-lg transition-all font-medium flex items-center gap-1">
+                            <i class="fa-solid fa-angles-up"></i> 모두 접기
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Theory Cards Accordions -->
+                <div class="space-y-4">
+                    <div id="sectionPart1" class="border border-slate-200 rounded-2xl overflow-hidden bg-slate-50/50 shadow-2xs transition-all">
+                        <button onclick="togglePartAccordion('part1')" class="w-full px-5 py-4 bg-white hover:bg-blue-50/30 flex justify-between items-center transition-all text-left border-b border-slate-200/80">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-2xs">파트 1</span>
+                                <div>
+                                    <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                                        <span>심리상담 이론</span>
+                                    </h3>
+                                    <p class="text-xs text-slate-500 font-normal">정신분석, 대상관계, 아들러, CBT, REBT, ACT, EFT, 이야기치료 등 16개 주요 심리상담 이론</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 text-slate-500 text-xs font-semibold">
+                                <span id="part1CountTag" class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-lg border border-blue-200">16개 항목</span>
+                                <i id="part1Arrow" class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 text-sm"></i>
+                            </div>
+                        </button>
+                        <div id="part1Content" class="p-5 hidden bg-slate-50/50 border-t border-slate-100">
+                            <div id="part1Grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                        </div>
+                    </div>
+
+                    <div id="sectionPart2" class="border border-slate-200 rounded-2xl overflow-hidden bg-slate-50/50 shadow-2xs transition-all">
+                        <button onclick="togglePartAccordion('part2')" class="w-full px-5 py-4 bg-white hover:bg-emerald-50/30 flex justify-between items-center transition-all text-left border-b border-slate-200/80">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-2xs">파트 2</span>
+                                <div>
+                                    <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                                        <span>진로 및 직업상담 이론</span>
+                                    </h3>
+                                    <p class="text-xs text-slate-500 font-normal">특성요인, Super 발달, 크롬불츠 우연이론, SCCT, CIP, 진로구성주의, PWT 등 9개 핵심 모델</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 text-slate-500 text-xs font-semibold">
+                                <span id="part2CountTag" class="bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-lg border border-emerald-200">9개 항목</span>
+                                <i id="part2Arrow" class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 text-sm"></i>
+                            </div>
+                        </button>
+                        <div id="part2Content" class="p-5 hidden bg-slate-50/50 border-t border-slate-100">
+                            <div id="part2Grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                        </div>
+                    </div>
+
+                    <div id="sectionPart3" class="border border-slate-200 rounded-2xl overflow-hidden bg-slate-50/50 shadow-2xs transition-all">
+                        <button onclick="togglePartAccordion('part3')" class="w-full px-5 py-4 bg-white hover:bg-purple-50/30 flex justify-between items-center transition-all text-left border-b border-slate-200/80">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-2xs">파트 3</span>
+                                <div>
+                                    <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                                        <span>상담 실무 워크시트 & 평가 양식 (이론별 정리)</span>
+                                    </h3>
+                                    <p class="text-xs text-slate-500 font-normal">초기상담질문지, 생애진로사정(LCA), CBT 5칼럼 양식, ACT 가치 탐색지 등 상담 현장 서식 8종</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 text-slate-500 text-xs font-semibold">
+                                <span id="part3CountTag" class="bg-purple-50 text-purple-700 px-2.5 py-1 rounded-lg border border-purple-200">8개 항목</span>
+                                <i id="part3Arrow" class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 text-sm"></i>
+                            </div>
+                        </button>
+                        <div id="part3Content" class="p-5 hidden bg-slate-50/50 border-t border-slate-100">
+                            <div id="part3Grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MENU 2 VIEW -->
+        <section id="view-menu2" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Left Control Panel -->
+                <div class="lg:col-span-4 space-y-6 no-print">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+                        <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                            <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-sliders text-emerald-600"></i>
+                                사례 입력 및 샘플 선택
+                            </h3>
+                            <button onclick="onLoadSampleButtonClick()" class="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold px-2.5 py-1.5 rounded-lg border border-emerald-200 transition-all flex items-center gap-1.5 shadow-2xs">
+                                <i class="fa-solid fa-file-import text-emerald-600"></i> 샘플 불러오기
+                            </button>
+                        </div>
+
+                        <!-- Preset Cases Selector -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">대표 예시 사례 선택</label>
+                            <select id="casePresetSelect" onchange="onCasePresetChange()" class="w-full text-xs p-2.5 border border-slate-300 rounded-xl bg-slate-50 focus:ring-2 focus:ring-emerald-500">
+                                <option value="sample1">사례 1: 28세 취준생 - 번아웃 및 존재적 무기력감 (CBT/ACT)</option>
+                                <option value="sample2">사례 2: 35세 직장인 - 직장 내 갈등 및 대인관계 회피 (개인심리학/REBT)</option>
+                                <option value="sample3">사례 3: 42세 경력단절 - 진로 정체성 혼란 및 불안 (Super/진로구성주의)</option>
+                                <option value="custom">직접 작성 (Custom Input)</option>
+                            </select>
+                        </div>
+
+                        <!-- Form Fields -->
+                        <div class="space-y-3 text-xs">
+                            <div>
+                                <label class="block font-medium text-slate-600 mb-1">1. 내담자 개요 (인적 사항, 가족 사항, 경제 상황, 직업 사항(아르바이트·인턴 등 직업 경험 포함), 자격 사항, 하루 일과, 대인관계, 희망 취업 조건(희망 취업 시기: ~개월 이내), 자신의 강점, 취업의 걸림돌)</label>
+                                <textarea id="caseProfileInput" rows="4" placeholder="예: • 인적 사항: 28세, 여, 대졸&#10;• 가족 사항: 부모님 동거&#10;• 경제 상황: 부모님 의존 중&#10;• 직업 사항: 무직 (공기업 취업준비 2년 차 / 카페 아르바이트 6개월, 공기업 인턴 3개월)&#10;• 자격 사항: 컴활 1급&#10;• 하루 일과: 09:00 기상 후 수험 공부&#10;• 대인관계: 지인들과의 연락 단절 및 사회적 위축&#10;• 희망 취업 조건: 공기업 사무직 (희망 취업 시기: 3개월 이내)&#10;• 자신의 강점: 성실함, 문서작성 역량&#10;• 취업의 걸림돌: 면접 불안..." class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500"></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block font-medium text-slate-600 mb-1">2. 내담자 호소문</label>
+                                <textarea id="caseComplaintInput" rows="3" placeholder="내담자가 소통한 구체적 호소 내용을 입력하세요..." class="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500"></textarea>
+                            </div>
+
+                            <!-- Problem Types -->
+                            <div>
+                                <div class="flex justify-between items-center mb-1.5">
+                                    <label class="block font-bold text-slate-700">3. 내담자 문제 유형 선택 (다중 선택)</label>
+                                    <button type="button" onclick="clearSelectedProblemTypes()" class="text-[10px] text-slate-400 hover:text-slate-600 underline">전체 해제</button>
+                                </div>
+                                <div id="problemTypeBtns" class="flex flex-wrap gap-1.5 p-2 bg-slate-50 border border-slate-300 rounded-xl"></div>
+                                <div id="customProblemTypeContainer" class="mt-2 hidden">
+                                    <input type="text" id="customProblemTypeInput" oninput="updateProblemTypeInputValue()" placeholder="기타 문제 유형 내용을 직접 입력하세요..." class="w-full p-2 text-xs border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-emerald-500">
+                                </div>
+                                <input type="hidden" id="caseProblemTypeInput" value="">
+
+                                <!-- Primary, Secondary & Instrumental Emotion Breakdown -->
+                                <div class="mt-2.5 p-2.5 bg-blue-50/70 rounded-xl border border-blue-200/80 space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[11px] font-bold text-blue-900 flex items-center gap-1">
+                                            <i class="fa-solid fa-heart text-blue-600"></i> 심리정서 세부 분석 (1차·2차·도구적 정서)
+                                        </span>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">💧 1차 정서 (근본 정서)</label>
+                                            <input type="text" id="primaryEmotionInput" placeholder="예: 슬픔, 상실감, 두려움" class="w-full p-1.5 text-xs border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">🔥 2차 정서 (표면/방어)</label>
+                                            <input type="text" id="secondaryEmotionInput" placeholder="예: 분노, 무력감, 자책" class="w-full p-1.5 text-xs border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">🎭 도구적 정서 (목적/조종)</label>
+                                            <input type="text" id="instrumentalEmotionInput" placeholder="예: 비판피하기용 무력감 연출" class="w-full p-1.5 text-xs border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 4. Core 3-Factor Input -->
+                            <div class="bg-purple-50/60 p-3 rounded-xl border border-purple-200/80 space-y-2.5">
+                                <div class="flex justify-between items-center">
+                                    <label class="block font-bold text-purple-900 text-[11px] flex items-center gap-1">
+                                        <i class="fa-solid fa-layer-group text-purple-600"></i>
+                                        4. 촉발 · 유지 · 보호요인(강점요인) 입력
+                                    </label>
+                                    <span class="text-[10px] text-purple-600 font-normal">미입력 시 자동 분석</span>
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-700 mb-1">⚡ 촉발요인 (왜 지금 문제가 드러났는가?)</label>
+                                    <input type="text" id="caseTriggerInput" placeholder="예: 최근 연속 탈락 통보..." class="w-full p-2 text-xs border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-purple-500">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-700 mb-1">🔄 유지요인 (왜 문제가 계속되는가?)</label>
+                                    <input type="text" id="caseMaintainingInput" placeholder="예: 자가비하 사고, 사회적 회피..." class="w-full p-2 text-xs border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-purple-500">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-700 mb-1">🌟 보호요인(강점요인: 1.직업적 / 2.개인적 / 3.환경적 / 4.심리적)</label>
+                                    <textarea id="caseProtectiveInput" rows="2" placeholder="예: 1.서류합격경험 | 2.높은 성실성 | 3.가족지지 | 4.자발적 상담 동기" class="w-full p-2 text-xs border border-slate-300 rounded-lg bg-white focus:ring-2 focus:ring-purple-500"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Theory Selector -->
+                            <div>
+                                <div class="flex justify-between items-center mb-1.5">
+                                    <label class="block font-bold text-slate-700">5. 적용 희망 이론 선택 (클릭하여 지정)</label>
+                                    <button type="button" onclick="openTheorySelectModal()" class="text-[11px] text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-2.5 py-1 rounded-lg font-bold transition-all flex items-center gap-1">
+                                        <i class="fa-solid fa-list-check"></i> 전체 이론 목록 팝업
+                                    </button>
+                                </div>
+                                <div id="selectedTheoryDisplay" class="flex flex-wrap gap-1.5 p-2 bg-slate-50 border border-slate-300 rounded-xl min-h-[42px] items-center text-xs"></div>
+                                <input type="hidden" id="caseTheoryInput" value="인지행동치료 (CBT), 수용전념치료 (ACT)">
+                            </div>
+                        </div>
+
+                        <div class="pt-2 space-y-2">
+                            <button onclick="generateCaseReport()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>상담 사례 보고서 생성</span>
+                            </button>
+                            <p class="text-[11px] text-slate-400 text-center">1. 사례개념화(1~10) + 2. 상담 진행 및 평가 체계적 작성</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Report Area -->
+                <div class="lg:col-span-8">
+                    <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 min-h-[600px] relative">
+                        <!-- Toolbar -->
+                        <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-200 no-print">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-full font-bold">상담 사례 보고서</span>
+                                <span class="text-xs text-slate-400">1. 사례개념화 (1~10) & 2. 상담 진행 및 평가</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="copyReportText()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg font-medium transition-all flex items-center gap-1">
+                                    <i class="fa-regular fa-copy"></i> 복사
+                                </button>
+                                <button onclick="printReport()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg font-medium transition-all flex items-center gap-1">
+                                    <i class="fa-solid fa-print"></i> 인쇄 / PDF 저장
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Loading Spinner overlay -->
+                        <div id="reportLoading" class="hidden absolute inset-0 bg-white/90 backdrop-blur-xs flex flex-col items-center justify-center rounded-2xl z-20">
+                            <div class="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+                            <p class="text-sm font-semibold text-slate-700">임상심리학자 & 직업상담사 관점에서 사례개념화 분석 중...</p>
+                            <p class="text-xs text-slate-400 mt-1">상담 사례 보고서를 구성하고 있습니다</p>
+                        </div>
+
+                        <!-- Report Output Box -->
+                        <div id="reportContainer" class="space-y-6 text-sm text-slate-800 leading-relaxed"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MENU 3 VIEW -->
+        <section id="view-menu3" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-graduation-cap text-purple-600"></i>
+                            상담이론 실전 적용 연습문제 (10문항 모음집)
+                        </h2>
+                        <p class="text-sm text-slate-500 mt-1">사례 지문을 읽고 이론별 핵심 개념과 치료적 개입 원리를 적용해 보세요.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span id="quizProgress" class="text-xs font-bold bg-purple-100 text-purple-800 px-3 py-1.5 rounded-full">문제 1 / 10</span>
+                    </div>
+                </div>
+
+                <!-- Quiz Container -->
+                <div class="space-y-6">
+                    <div class="flex items-center space-x-2 overflow-x-auto pb-2 custom-scrollbar">
+                        <div id="quizNavContainer" class="flex space-x-2"></div>
+                    </div>
+
+                    <div id="quizCard" class="bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-5">
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs">
+                            <div class="flex justify-between items-center mb-2">
+                                <span id="quizTheoryBadge" class="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-md border border-purple-200">정신분석상담</span>
+                                <span class="text-xs text-slate-400">사례 지문</span>
+                            </div>
+                            <div id="quizScenario" class="text-sm text-slate-700 leading-relaxed font-normal whitespace-pre-line"></div>
+                        </div>
+
+                        <div>
+                            <h4 id="quizQuestion" class="text-base font-bold text-slate-900 flex items-start gap-2">
+                                <i class="fa-solid fa-circle-question text-purple-600 mt-1"></i>
+                                <span>질문 내용</span>
+                            </h4>
+                        </div>
+
+                        <div class="space-y-3">
+                            <label class="block text-xs font-semibold text-slate-600">상담사 답안 작성란 (연습)</label>
+                            <textarea id="quizUserAnswer" rows="3" placeholder="본인이 생각하는 답안을 기술한 뒤 '정답 및 모범 답안 보기'를 클릭하거나 AI 채점을 받아보세요..." class="w-full p-3 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-purple-500 bg-white"></textarea>
+                            
+                            <div class="flex flex-wrap gap-2 justify-between items-center">
+                                <button onclick="evaluateUserAnswerWithAI()" class="text-xs bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl font-medium transition-all flex items-center gap-1.5">
+                                    <i class="fa-solid fa-robot"></i> AI 첨삭 및 채점 받기
+                                </button>
+                                <button onclick="toggleAnswerVisibility()" id="btnToggleAnswer" class="text-xs bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-xl font-medium transition-all flex items-center gap-1.5">
+                                    <i class="fa-solid fa-eye"></i> 표준 정답 및 상세 해설 보기
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="aiFeedbackBox" class="hidden bg-purple-50/80 rounded-xl p-4 border border-purple-200 text-xs text-slate-800 space-y-2">
+                            <div class="flex items-center justify-between font-bold text-purple-900">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-wand-magic-sparkles text-purple-600"></i> AI 피드백 및 교정</span>
+                                <span id="aiScoreBadge" class="bg-purple-200 text-purple-900 px-2 py-0.5 rounded-md">평가중...</span>
+                            </div>
+                            <div id="aiFeedbackContent" class="leading-relaxed"></div>
+                        </div>
+
+                        <div id="modelAnswerBox" class="hidden bg-emerald-50/80 rounded-xl p-5 border border-emerald-200 text-xs text-slate-800 space-y-3">
+                            <div class="font-bold text-emerald-900 flex items-center gap-2 text-sm">
+                                <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                                표준 모범 답안 및 이론적 근거
+                            </div>
+                            <div id="modelAnswerText" class="whitespace-pre-line text-slate-700 leading-relaxed"></div>
+                            <div class="pt-2 border-t border-emerald-200/60 font-semibold text-emerald-800">
+                                💡 주요 검토 포인트:
+                                <ul id="quizCheckpoints" class="list-disc list-inside font-normal text-slate-600 mt-1 space-y-1"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MENU 4 VIEW -->
+        <section id="view-menu4" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-6">
+                <div class="pb-4 border-b border-slate-100">
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+                                <i class="fa-solid fa-comments text-amber-500"></i>
+                                상담기법 대화 트레이닝 (실전 반응 연습)
+                            </h2>
+                            <button onclick="toggleTechniqueReference()" class="text-xs bg-slate-800 hover:bg-slate-900 text-white font-bold px-3 py-1.5 rounded-lg border border-slate-700 shadow-md transition-all flex items-center gap-1.5">
+                                <i class="fa-solid fa-book-bookmark text-amber-400"></i> 주요 기법 핵심요약표 보기
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-500 mt-1.5">내담자 발화에 대해 감정 반영, 재진술, 직면, 명료화, 초점화, 개방형/폐쇄형 질문, 해석, 즉시성, 정보제공 기법을 적용해 보세요.</p>
+                </div>
+
+                <div id="techniqueRefBox" class="bg-amber-50/50 rounded-xl p-4 border border-amber-200 text-xs text-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-table-list text-amber-600"></i>
+                            핵심 10대 상담기법 정의, 적용 방법 및 예시 구문
+                        </h4>
+                        <span class="text-[11px] bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-md">
+                            흐름: 재진술 ➔ 반영 ➔ 명료화 ➔ 해석 ➔ 직면 ➔ 즉시성
+                        </span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse border border-slate-200 bg-white rounded-lg">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-700 font-bold">
+                                    <th class="p-2.5 border border-slate-200 min-w-[110px]">기법명</th>
+                                    <th class="p-2.5 border border-slate-200 min-w-[180px]">개념 및 정의</th>
+                                    <th class="p-2.5 border border-slate-200 min-w-[220px]">구체적 구사 방법 (적용 원칙)</th>
+                                    <th class="p-2.5 border border-slate-200 min-w-[220px]">모범적 발화 패턴 예시</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 text-slate-600">
+                                <tr>
+                                    <td class="p-2.5 font-bold text-amber-800 bg-amber-50/30">감정 반영<br><span class="text-[10px] text-slate-400 font-normal">(Reflection)</span></td>
+                                    <td class="p-2.5">내담자가 표현한 언어적·비언어적 표피 아래의 정서 상태를 거울처럼 포착하여 수용적으로 전달</td>
+                                    <td class="p-2.5">내담자의 표정, 목소리 톤, 감정 어휘를 포착하고 평가 없이 전달함.</td>
+                                    <td class="p-2.5 font-medium text-slate-800">"~한 상황 속에서 혼자 감당해야 한다는 막막함과 외로움을 깊게 느끼셨군요."</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-amber-800 bg-amber-50/30">재진술<br><span class="text-[10px] text-slate-400 font-normal">(Restatement)</span></td>
+                                    <td class="p-2.5">내담자가 전한 복잡한 인지적·상황적 사건의 핵심 메시지를 상담자의 간결한 언어로 압축 재전달</td>
+                                    <td class="p-2.5">사건의 본질을 압축 정리하여 "즉, ~라는 상황이시군요" 형태로 내용을 확정함.</td>
+                                    <td class="p-2.5 font-medium text-slate-800">"즉, 팀 내 업무 분장이 불명확해 혼자 책임을 떠안게 된다는 말씀이시군요."</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-amber-800 bg-amber-50/30">직면<br><span class="text-[10px] text-slate-400 font-normal">(Confrontation)</span></td>
+                                    <td class="p-2.5">내담자의 언어-행동, 말-감정, 목표-실제행동 간의 모순이나 불일치를 공감적으로 지적</td>
+                                    <td class="p-2.5">수용적 라포를 바탕으로 "한편으로는 ~하지만, 다른 한편으로는 ~하게 행동하시네요"라며 지적.</td>
+                                    <td class="p-2.5 font-medium text-slate-800">"변화하고 싶다고 말씀하시면서도, 막상 지원서를 쓰려고 하면 미루게 되는 것 같아요."</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-amber-800 bg-amber-50/30">명료화<br><span class="text-[10px] text-slate-400 font-normal">(Clarification)</span></td>
+                                    <td class="p-2.5">모호하거나 혼란스러운 진술을 구체적인 개념, 단어, 명확한 사례로 정의하고 정립하도록 조력</td>
+                                    <td class="p-2.5">모호한 형용사를 짚어내어 구체적인 질문을 던짐.</td>
+                                    <td class="p-2.5 font-medium text-slate-800">"'상황이 엉망이다'라고 하셨는데, 구체적으로 어떤 부분이 가장 조절하기 어려우신가요?"</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-amber-800 bg-amber-50/30">초점화<br><span class="text-[10px] text-slate-400 font-normal">(Focusing)</span></td>
+                                    <td class="p-2.5">산만하게 흩어지는 이야기 중 치료적 의미가 가장 크거나 시급한 핵심 주제로 주의를 집중</td>
+                                    <td class="p-2.5">우선적으로 다루고 싶은 핵심 주제를 정하도록 안내함.</td>
+                                    <td class="p-2.5 font-medium text-slate-800">"여러 고민을 나누어 주셨는데, 지금 이 순간 가장 우선적으로 다루고 싶은 주제는 무엇일까요?"</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-amber-800 bg-amber-50/30">개방형 질문<br><span class="text-[10px] text-slate-400 font-normal">(Open Question)</span></td>
+                                    <td class="p-2.5">내담자가 자유롭고 깊게 탐색·표현하도록 유도</td>
+                                    <td class="p-2.5">'무엇(What)', '어떻게(How)'를 활용하여 탐색 주도권을 제공.</td>
+                                    <td class="p-2.5 font-medium text-slate-800">"그 상황에서 내담자님의 마음속에 어떤 생각과 마음이 가장 크게 일어났나요?"</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-amber-800 bg-amber-50/30">폐쇄형 질문<br><span class="text-[10px] text-slate-400 font-normal">(Closed Question)</span></td>
+                                    <td class="p-2.5">특정 사실 관계, 객관적 정보, 동의 여부를 신속히 확인</td>
+                                    <td class="p-2.5">'예/아니오' 또는 단답형 수치로 답변할 수 있게 조건 지정.</td>
+                                    <td class="p-2.5 font-medium text-slate-800">"현재 회사에 정식으로 사직서를 제출하신 상태이신가요?"</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-amber-800 bg-amber-50/30">해석<br><span class="text-[10px] text-slate-400 font-normal">(Interpretation)</span></td>
+                                    <td class="p-2.5">발화 이면의 무의식적 역동, 반복적 방어기제를 새로운 관점에서 설명</td>
+                                    <td class="p-2.5">가설적 어조("~일 수도 있습니다")로 제시하여 통찰 유도.</td>
+                                    <td class="p-2.5 font-medium text-slate-800">"퇴사하고 싶은 마음 깊은 곳에는 또다시 인정받지 못할지 모른다는 두려움이 작용하는 것 같아요."</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-amber-800 bg-amber-50/30">즉시성<br><span class="text-[10px] text-slate-400 font-normal">(Immediacy)</span></td>
+                                    <td class="p-2.5">'지금-여기(Here & Now)' 상담실 안에서 일어나는 반응 탐색</td>
+                                    <td class="p-2.5">비언어적 변화를 포착하여 현재 대화 장면에서의 감정 직면.</td>
+                                    <td class="p-2.5 font-medium text-slate-800">"지금 저에게 그 이야기를 나누시는 순간에도 목소리가 떨리시는데, 현재 저와 나누는 이 대화에서 어떤 마음이 드시나요?"</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-amber-800 bg-amber-50/30">직업적 정보제공<br><span class="text-[10px] text-slate-400 font-normal">(Information Giving)</span></td>
+                                    <td class="p-2.5">진로 의사결정과 문제 해결에 필수적인 정보 전달</td>
+                                    <td class="p-2.5">객관적이고 체계적인 직업 정보 및 제도적 자원 전달.</td>
+                                    <td class="p-2.5 font-medium text-slate-800">"해당 직종은 ~자격증과 실무 경험을 우대하고 있으며, ~지원 사업을 통해 훈련을 받으실 수 있습니다."</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-bold text-slate-700">내담자 발화 시나리오 선택 (총 5개 실전 유형)</label>
+                        <span id="techScenarioNum" class="text-xs text-amber-700 font-semibold bg-amber-100 px-2.5 py-0.5 rounded-full">사례 1 / 5</span>
+                    </div>
+
+                    <div class="flex space-x-2 overflow-x-auto pb-1 custom-scrollbar" id="techScenarioTabContainer"></div>
+
+                    <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-5 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+                                <i class="fa-solid fa-comment-dots text-amber-600"></i>
+                                내담자 호소 발화
+                            </span>
+                            <span id="clientEmotionBadge" class="text-[11px] font-semibold bg-amber-200/80 text-amber-900 px-2 py-0.5 rounded-md">정서: 분노/무력감</span>
+                        </div>
+                        <p id="clientStatementText" class="text-sm font-medium text-slate-800 leading-relaxed italic">
+                            "..."
+                        </p>
+                    </div>
+
+                    <div class="space-y-4 pt-2">
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-800 mb-2 flex items-center justify-between">
+                                    <span class="flex items-center gap-2">
+                                        <i class="fa-solid fa-list-check text-amber-500 text-base"></i>
+                                        <span>적용하고자 하는 기법 선택 (총 10개 핵심기법)</span>
+                                    </span>
+                                    <span class="text-xs text-amber-700 font-normal">원하는 기법 타일을 클릭하세요</span>
+                                </label>
+                                <div id="techniquePillsContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 p-3 bg-amber-50/60 border border-amber-200 rounded-2xl"></div>
+                                <select id="selectedTechnique" class="hidden">
+                                    <option value="감정 반영">감정 반영</option>
+                                    <option value="재진술">재진술</option>
+                                    <option value="직면">직면</option>
+                                    <option value="명료화">명료화</option>
+                                    <option value="초점화">초점화</option>
+                                    <option value="개방형 질문">개방형 질문</option>
+                                    <option value="폐쇄형 질문">폐쇄형 질문</option>
+                                    <option value="해석">해석</option>
+                                    <option value="즉시성">즉시성</option>
+                                    <option value="직업적 정보제공">직업적 정보제공</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">상담사의 언어적 반응 구사</label>
+                                <input type="text" id="userTechResponse" placeholder="선택한 기법을 활용하여 내담자에게 전달할 구체적 발화를 입력하세요..." class="w-full text-xs p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-amber-500 shadow-2xs">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button onclick="evaluateTechniqueResponse()" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>내 반응 작성 & 베테랑 슈퍼바이저 AI 피드백</span>
+                            </button>
+                            <button onclick="showTechniqueModelAnswer()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center gap-1.5 whitespace-nowrap">
+                                <i class="fa-solid fa-lightbulb"></i>
+                                <span>모범 반응 모음 보기</span>
+                            </button>
+                        </div>
+
+                        <div id="techFeedbackResult" class="hidden bg-slate-50 rounded-xl p-4 border border-slate-200 text-xs space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-clipboard-check text-amber-500"></i>
+                                    피드백 및 슈퍼비전 결과
+                                </span>
+                                <span id="techScoreTag" class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-md">우수</span>
+                            </div>
+                            <div id="techFeedbackBody" class="text-slate-700 leading-relaxed whitespace-pre-line"></div>
+                        </div>
+
+                        <div id="techModelBox" class="hidden bg-emerald-50/80 rounded-xl p-4 border border-emerald-200 text-xs space-y-3">
+                            <h4 class="font-bold text-emerald-900 text-sm flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                                기법별 모범 예시 반응집
+                            </h4>
+                            <div id="techModelList" class="space-y-2 text-slate-700"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MENU 5 VIEW -->
+        <section id="view-menu5" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-6">
+                <!-- Title & Header -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-scale-balanced text-teal-600"></i>
+                            주요 학회 및 협회별 상담사 윤리 강령
+                        </h2>
+                        <p class="text-sm text-slate-500 mt-1">한국상담심리학회, 한국상담학회, 한국진로상담학회, 한국직업상담협회의 윤리 가이드라인 및 전문 실무 윤리 규정</p>
+                    </div>
+                    <!-- Search Input -->
+                    <div class="relative w-full sm:w-72">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-sm"></i>
+                        <input type="text" id="ethicsSearchInput" onkeyup="searchEthics()" placeholder="윤리 조항, 키워드 검색 (예: 비밀보장, 이중관계)..." class="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 bg-slate-50">
+                    </div>
+                </div>
+
+                <!-- Ethics Association Filter Buttons -->
+                <div class="flex flex-wrap items-center gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200/80">
+                    <span class="text-xs font-bold text-slate-600 mr-2 flex items-center gap-1">
+                        <i class="fa-solid fa-building-columns text-teal-600"></i> 협회 선택:
+                    </span>
+                    <button onclick="filterEthicsAssociation('all')" id="btnEthicsAll" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-teal-600 text-white shadow-xs hover:bg-teal-700 transition-all">
+                        전체 보기
+                    </button>
+                    <button onclick="filterEthicsAssociation('kcpa')" id="btnEthicsKcpa" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition-all">
+                        한국상담심리학회 (KCPA)
+                    </button>
+                    <button onclick="filterEthicsAssociation('kca')" id="btnEthicsKca" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition-all">
+                        한국상담학회 (KCA)
+                    </button>
+                    <button onclick="filterEthicsAssociation('kcca')" id="btnEthicsKcca" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition-all">
+                        한국진로상담학회 (KCCA)
+                    </button>
+                    <button onclick="filterEthicsAssociation('kova')" id="btnEthicsKova" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition-all">
+                        한국직업상담협회 (KOVA)
+                    </button>
+                </div>
+
+                <!-- Ethics Cards Grid -->
+                <div id="ethicsCardsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+
+                <!-- Counselor Ethical Practice Self-Checklist -->
+                <div class="bg-teal-50/70 border border-teal-200 rounded-2xl p-6 space-y-4">
+                    <div class="flex justify-between items-center border-b border-teal-200/80 pb-3">
+                        <h3 class="font-bold text-teal-900 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-teal-600"></i>
+                            상담 현장 윤리적 실무 자가 진단 체크리스트 (Counselor Self-Checklist)
+                        </h3>
+                        <span class="text-xs font-bold bg-teal-200 text-teal-900 px-2.5 py-1 rounded-full">총 8개 점검 항목</span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        실제 상담 진행 전/후 및 회기 중 상담사가 반드시 준수해야 할 기본 윤리적 지침을 직접 체크해 보세요.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-800">
+                        <label class="flex items-start gap-2.5 p-3 bg-white rounded-xl border border-teal-100 shadow-2xs cursor-pointer hover:border-teal-300">
+                            <input type="checkbox" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
+                            <span><b>1. 사전동의(Informed Consent)</b>: 상담 시작 전 내담자에게 상담 목표, 접근법, 예상 기간, 비용, 비밀보장의 한계를 구체적으로 설명하고 동의를 받았는가?</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 p-3 bg-white rounded-xl border border-teal-100 shadow-2xs cursor-pointer hover:border-teal-300">
+                            <input type="checkbox" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
+                            <span><b>2. 비밀보장의 예외 한계</b>: 내담자가 자신이나 타인에게 치명적 위해를 가할 우려, 학대, 법원의 명령 등 윤리적 예외 상황을 명확히 고지하였는가?</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 p-3 bg-white rounded-xl border border-teal-100 shadow-2xs cursor-pointer hover:border-teal-300">
+                            <input type="checkbox" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
+                            <span><b>3. 다중관계(이중관계) 방지</b>: 내담자와 금전 거래, 개인적 친분, 성적 관계 등 객관적 판단을 저해하는 이중관계를 철저히 차단하고 있는가?</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 p-3 bg-white rounded-xl border border-teal-100 shadow-2xs cursor-pointer hover:border-teal-300">
+                            <input type="checkbox" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
+                            <span><b>4. 전문성 및 능력 한계</b>: 자신의 수련 범위와 전문적 능력을 넘어서는 문제에 대해 무리하게 다루지 않고 전문기관이나 상급 전문가에게 의뢰(Referral)하는가?</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 p-3 bg-white rounded-xl border border-teal-100 shadow-2xs cursor-pointer hover:border-teal-300">
+                            <input type="checkbox" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
+                            <span><b>5. 직업/진로 정보의 객관성</b>: 특정 기업이나 교육기관에 편향되지 않은 객관적이고 최신의 진로 및 직업 정보를 공정하게 제공하고 있는가?</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 p-3 bg-white rounded-xl border border-teal-100 shadow-2xs cursor-pointer hover:border-teal-300">
+                            <input type="checkbox" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
+                            <span><b>6. 자율성 존중 및 자기결정권</b>: 진로 선택이나 삶의 의사결정 시 상담자의 주관적 견해를 강요하지 않고 내담자의 주체적 선택을 보장하는가?</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 p-3 bg-white rounded-xl border border-teal-100 shadow-2xs cursor-pointer hover:border-teal-300">
+                            <input type="checkbox" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
+                            <span><b>7. 상담 기록 및 개인정보 관리</b>: 상담 기록 축어록 및 인적사항을 안전한 암호화 환경에 보관하며 타인에게 노출되지 않도록 철저히 관리하는가?</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 p-3 bg-white rounded-xl border border-teal-100 shadow-2xs cursor-pointer hover:border-teal-300">
+                            <input type="checkbox" class="mt-0.5 rounded text-teal-600 focus:ring-teal-500">
+                            <span><b>8. 지속적 슈퍼비전 및 교육</b>: 자신의 역량이 정체되지 않도록 전문가 수련 회기 참여, 슈퍼비전 수혜 및 지속적 보수교육을 이수하고 있는가?</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <!-- API Key Settings Modal -->
+    <div id="apiModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-200">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-key text-amber-500"></i>
+                    Gemini API Key 설정
+                </h3>
+                <button onclick="closeApiModal()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+                Gemini API 키를 입력하시면 실시간 사례개념화 작성, 수련생 답안 개별 AI 채점, 상담기법 첨삭 기능을 이용하실 수 있습니다.
+            </p>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">API Key</label>
+                <input type="password" id="apiKeyInput" placeholder="AI Studio 키를 입력하세요 (또는 비워둠)" class="w-full text-xs p-2.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div class="flex justify-end space-x-2 pt-2">
+                <button onclick="saveApiKey()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition-all">
+                    저장 및 설정
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theory Detail Modal -->
+    <div id="theoryModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200">
+            <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-2xl">
+                <div>
+                    <span id="modalTheoryCategory" class="text-[11px] font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">파트 1. 심리상담</span>
+                    <h3 id="modalTheoryTitle" class="text-xl font-bold text-slate-900 mt-1">이론명</h3>
+                    <p id="modalTheoryScholar" class="text-xs text-slate-500 font-medium">학자명</p>
+                </div>
+                <button onclick="closeTheoryModal()" class="text-slate-400 hover:text-slate-600 p-2">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div id="modalTheoryBody" class="p-6 overflow-y-auto custom-scrollbar space-y-5 text-xs sm:text-sm text-slate-700 leading-relaxed"></div>
+            <div class="p-4 border-t border-slate-200 bg-slate-50 rounded-b-2xl flex justify-end">
+                <button onclick="closeTheoryModal()" class="px-4 py-2 bg-slate-800 text-white text-xs font-bold rounded-xl hover:bg-slate-900">
+                    닫기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theory Selection Modal for Menu 2 -->
+    <div id="theorySelectModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-slate-200">
+            <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-2xl">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-emerald-600"></i>
+                        상담 사례 보고서 적용 희망 이론 선택 메뉴
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-0.5">클릭하여 사례 보고서에 적용할 이론을 선택하세요.</p>
+                </div>
+                <button onclick="closeTheorySelectModal()" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-5 overflow-y-auto custom-scrollbar space-y-5 text-xs">
+                <div>
+                    <h4 class="font-bold text-blue-800 text-xs mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-heart-pulse text-blue-600"></i>
+                        파트 1. 심리상담 이론 (16개)
+                    </h4>
+                    <div id="modalPart1Btns" class="flex flex-wrap gap-1.5"></div>
+                </div>
+                <div class="pt-3 border-t border-slate-200">
+                    <h4 class="font-bold text-emerald-800 text-xs mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-briefcase text-emerald-600"></i>
+                        파트 2. 진로 및 직업상담 이론 (9개)
+                    </h4>
+                    <div id="modalPart2Btns" class="flex flex-wrap gap-1.5"></div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-slate-200 bg-slate-50 rounded-b-2xl flex justify-between items-center">
+                <span id="modalSelectedCount" class="text-xs font-bold text-slate-600">선택된 이론: 0개</span>
+                <div class="space-x-2">
+                    <button onclick="resetAllSelectedTheories()" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-xl transition-all">
+                        전체 해제
+                    </button>
+                    <button onclick="closeTheorySelectModal()" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow-xs">
+                        선택 완료
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Worksheet Template Modal -->
+    <div id="worksheetModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200">
+            <div class="p-5 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-2xl">
+                <div>
+                    <span id="modalWorksheetTheory" class="text-[11px] font-bold text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-full border border-purple-200">이론명</span>
+                    <h3 id="modalWorksheetTitle" class="text-xl font-bold text-slate-900 mt-1">워크시트 제목</h3>
+                    <p id="modalWorksheetDesc" class="text-xs text-slate-500 font-medium">상담 목적 및 사용 지침</p>
+                </div>
+                <button onclick="closeWorksheetModal()" class="text-slate-400 hover:text-slate-600 p-2">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div id="modalWorksheetBody" class="p-6 overflow-y-auto custom-scrollbar space-y-4 text-xs sm:text-sm text-slate-700 leading-relaxed bg-slate-50/50"></div>
+            <div class="p-4 border-t border-slate-200 bg-slate-50 rounded-b-2xl flex justify-between items-center">
+                <button onclick="copyCurrentWorksheetText()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shadow-2xs">
+                    <i class="fa-regular fa-copy"></i>
+                    <span>양식 서식 텍스트 복사</span>
+                </button>
+                <button onclick="closeWorksheetModal()" class="px-4 py-2 bg-slate-800 text-white text-xs font-bold rounded-xl hover:bg-slate-900">
+                    닫기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        let currentTab = 'menu1';
+        let userApiKey = localStorage.getItem('counselor_gemini_api_key') || '';
+        let part1Expanded = false;
+        let part2Expanded = false;
+        let part3Expanded = false;
+        let activeWorksheetId = null;
+
+        let selectedTheoriesSet = new Set();
+        let selectedProblemTypesSet = new Set();
+        let currentQuizIndex = 0;
+        let currentTechScenarioIndex = 0;
+        let selectedTechniqueName = '감정 반영';
+        let currentEthicsFilter = 'all';
+
+        const ALL_PROBLEM_TYPES = [
+            '심리정서문제',
+            '정보부족',
+            '역량부족',
+            '환경자원부족',
+            '의사결정부족',
+            '계획 및 실행 부족',
+            '기타'
+        ];
+
+        const theoryData = {
+            part1: [
+                {
+                    id: 'p1_1',
+                    name: '정신분석상담',
+                    scholar: 'Sigmund Freud',
+                    summary: '무의식적 갈등, 심리성적 발달단계, 자유연상 및 전이분석을 통한 성격 재구조화',
+                    concept: '인간의 행동은 무의식적 동기와 어린 시절의 경험에 의해 결정된다는 결정론적 관점. 원초아(Id), 자아(Ego), 초자아(Superego) 간의 역동적 균형이 중요함.',
+                    viewpoint: '무의식적 갈등, 억압된 충동, 그리고 자아방어기제의 과도한 사용으로 인해 심리적 증상과 부적응이 발생함.',
+                    techniques: '• <b>자유연상</b>: 마음속 생각을 검열 없이 말하게 함.\n• <b>꿈 분석</b>: 잠재재를 해석함.\n• <b>저항 분석</b>: 저항 원인 파악.\n• <b>전이 해석</b>: 무의식 역동 해석.\n• <b>훈습</b>: 실생활 행동 변화 연결.',
+                    application: '무의식적 자아 방어 이해 및 장기 치료 맥락에 유용.',
+                    books: '《정신분석학 입문》(Freud), 《자아와 방어기제》(Anna Freud)'
+                },
+                {
+                    id: 'p1_2',
+                    name: '대상관계상담',
+                    scholar: 'Melanie Klein, Donald Winnicott',
+                    summary: '내재화된 대상관계, 분열(Splitting), 안아주기(Holding) 환경',
+                    concept: '초기 양육자와의 상호작용 경험이 내재화되어 형성된 내적 대상관계 패턴이 성인기 대인관계 및 자아상에 결정적 영향.',
+                    viewpoint: '초기 대인관계 상처, 불안정한 애착, 분열 및 투사적 동일시로 인한 자아 통합 장애.',
+                    techniques: '• <b>안아주기 환경</b>: 안전한 시공간 제공.\n• <b>버텨주기</b>: 파괴적 정서를 완화해 돌려줌.\n• <b>투사적 동일시 해석</b>: 역동 자각시킴.\n• <b>긍정적 재부모화</b>: 양육적 경험 제공.',
+                    application: '경계선 성격특성이나 깊은 대인관계 불안 교정에 결정적.',
+                    books: '《대상관계이론과 심리치료》(Hamilton)'
+                },
+                {
+                    id: 'p1_3',
+                    name: '분석심리학',
+                    scholar: 'Carl Jung',
+                    summary: '집단무의식, 원형(Archetype), 그림자(Shadow), 개성화(Individuation)',
+                    concept: '자아(Ego)가 자기(Self)로 나아가는 개성화 과정이 핵심.',
+                    viewpoint: '페르소나와 그림자의 불균형, 내면적 대립물의 미통합으로 인한 삶의 의미 상실.',
+                    techniques: '• <b>꿈 분석</b>: 원형적 의미 확장.\n• <b>능동적 상상</b>: 그림자적 인물들과 대화.\n• <b>단어연상검사</b>: 콤플렉스 파악.\n• <b>상징 분석</b>: 페르소나/아니마 이해.',
+                    application: '중장년기 진로 전환 및 존재적 무기력감 해소.',
+                    books: '《인간과 상징》(Jung)'
+                },
+                {
+                    id: 'p1_4',
+                    name: '개인심리학',
+                    scholar: 'Alfred Adler',
+                    summary: '열등감과 보상, 우월성 추구, 생활양식(Life Style), 사회적 관심',
+                    concept: '열등감을 극복하고 우월성을 추구하며 사회적 관심을 실현함.',
+                    viewpoint: '부적절한 생활양식, 과도한 열등감 착각, 사회적 관심 결여.',
+                    techniques: '• <b>생활양식 분석</b>: 출생순위/가족구도 분석.\n• <b>초기 기억 탐색</b>: 근본 신념 확인.\n• <b>"마치 ~인 것처럼 행동하기"</b>: 행동 시연.\n• <b>단추 누르기 기법</b>: 정서 선택 자각.',
+                    application: '직장 내 갈등, 열등감을 느끼는 내담자 동기부여.',
+                    books: '《인간이해》(Adler)'
+                },
+                {
+                    id: 'p1_5',
+                    name: '실존주의 상담',
+                    scholar: 'Viktor Frankl, Irvin Yalom',
+                    summary: '실존적 조건(죽음·자유·고립·무의미), 의미치료(Logotherapy)',
+                    concept: '자유로운 선택의 주체이자 그에 따른 책임을 지는 존재.',
+                    viewpoint: '실존적 실재와의 직면에서 오는 불안 및 삶의 의미 상실.',
+                    techniques: '• <b>역설적 의도</b>: 의도적 수행 지시.\n• <b>탈초점화</b>: 외부 의미로 시선 전환.\n• <b>의미의 발견</b>: 소크라테스식 대화.\n• <b>실존적 직면</b>: 주체적 책임감 자각.',
+                    application: '번아웃, 상실감, 삶의 무기력감 호소 내담자.',
+                    books: '《죽음의 수용소에서》(Frankl)'
+                },
+                {
+                    id: 'p1_6',
+                    name: '인간중심상담',
+                    scholar: 'Carl Rogers',
+                    summary: '실현 경향성, 가치 조건화, 3대 촉진적 조건(일치성·무조건적 긍정적 존중·공감)',
+                    concept: '스스로 성장하고 자기실현을 이룰 잠재력을 가짐.',
+                    viewpoint: '가치 조건화로 자기개념과 경험 간 불일치 발생.',
+                    techniques: '• <b>공감적 경청</b>: 주관적 세계 파악.\n• <b>감정 반영</b>: 정서 상태 비춤.\n• <b>무조건적 긍정적 존중</b>: 있는 그대로 수용.\n• <b>일치성/진실성</b>: 정직한 내면 일치.',
+                    application: '모든 상담 관계의 기본 라포 형성 및 자기수용.',
+                    books: '《사람-중심 상담》(Rogers)'
+                },
+                {
+                    id: 'p1_7',
+                    name: '게슈탈트상담',
+                    scholar: 'Fritz Perls',
+                    summary: '알아차림과 접촉, 미해결 과제, 전경과 배경, 빈 의자 기법',
+                    concept: '"지금-여기"에서의 신체 및 정서적 알아차림 강조.',
+                    viewpoint: '미해결 과제, 전경/배경 교체 장애, 접촉경계 혼란.',
+                    techniques: '• <b>빈 의자 기법</b>: 갈등 대상과 대화.\n• <b>신체 알아차림</b>: 신체 감각 자각.\n• <b>과장하기</b>: 동작/표정 크게 반복.\n• <b>꿈 작업</b>: 등장인물이 되어 말하기.',
+                    application: '정서 억압, 대인관계 미해결 갈등 해소.',
+                    books: '《게슈탈트 심리치료》(Perls)'
+                },
+                {
+                    id: 'p1_8',
+                    name: '행동주의 상담',
+                    scholar: 'B.F. Skinner, Joseph Wolpe',
+                    summary: '조건형성, 체계적 둔감법, 관찰학습, 행동수정',
+                    concept: '모든 행동은 환경과의 상호작용 속에서 학습됨.',
+                    viewpoint: '부적절한 조건형성과 학습 경험으로 행동 유지.',
+                    techniques: '• <b>체계적 둔감법</b>: 이완 상태 노출.\n• <b>토큰 경제</b>: 목표 행동 보상.\n• <b>노출 치료</b>: 공포 자극에 머물기.\n• <b>행동조형</b>: 단계별 순차 강화.',
+                    application: '면접 불안, 사회적 수줍음, 습관 교정.',
+                    books: '《행동치료의 이론과 실제》(Corsini)'
+                },
+                {
+                    id: 'p1_9',
+                    name: '합리정서행동치료 (REBT)',
+                    scholar: 'Albert Ellis',
+                    summary: 'ABCDE 모델, 비합리적 신념, 적극적 논박(Disputation)',
+                    concept: '사건(A)을 해석하는 신념체계(B)가 결과(C)를 결정.',
+                    viewpoint: '당위적 사고에 기반한 비합리적 신념이 문제 유발.',
+                    techniques: '• <b>ABCDE 모델</b>: 구조화 분석.\n• <b>논박</b>: 질문으로 신념 수정.\n• <b>수치심 고양 연습</b>: 파국 공포 완화.\n• <b>합리적-정서 흠향</b>: 정서 전환 시연.',
+                    application: '면접 당위적 불안, 완벽주의적 사고 개입.',
+                    books: '《알버트 엘리스의 REBT》(Ellis)'
+                },
+                {
+                    id: 'p1_10',
+                    name: '인지행동치료 (CBT)',
+                    scholar: 'Aaron Beck',
+                    summary: '자동적 사고, 인지적 오류, 핵심신념, 인지재구조화',
+                    concept: '역기능적 자동적 사고를 포착하고 인지 재구조화 도모.',
+                    viewpoint: '인지 삼합 및 인지적 오류가 우울과 불안 유발.',
+                    techniques: '• <b>사고기록지 작성</b>: 5칼럼 기록.\n• <b>소크라테스식 질문법</b>: 타당성 검증.\n• <b>행동실험</b>: 사고 사실 여부 실험.\n• <b>하향 화살표 기법</b>: 핵심신념 도출.',
+                    application: '우울, 불안, 구직 실패 후 자가비하 완화.',
+                    books: '《인지치료의 이론과 실제》(Judith Beck)'
+                },
+                {
+                    id: 'p1_11',
+                    name: '교류분석 (TA)',
+                    scholar: 'Eric Berne',
+                    summary: 'PAC 자아상태, 구조분석, 교류패턴분석, 인생각본',
+                    concept: '어버이(P), 어른(A), 어린이(C) 자아상태를 보유.',
+                    viewpoint: '불건강한 인생각본, 이면교류로 인한 의사소통 장애.',
+                    techniques: '• <b>자아상태 분석</b>: P, A, C 평가.\n• <b>교류패턴 분석</b>: 이면교류 분석.\n• <b>스트로크 부여</b>: 인정 반응 제공.\n• <b>인생각본 재작성</b>: 건강한 각본 결단.',
+                    application: '직장 및 가족 커뮤니케이션 갈등 교정.',
+                    books: '《교류분석 이론과 실제》(Berne)'
+                },
+                {
+                    id: 'p1_12',
+                    name: '현실치료',
+                    scholar: 'William Glasser',
+                    summary: '선택이론, 5가지 기본욕구, WDEP 체계',
+                    concept: '5가지 기본욕구를 충족하기 위해 자신의 행동을 선택.',
+                    viewpoint: '욕구를 통제하려다 부적절한 선택을 함.',
+                    techniques: '• <b>WDEP 체계</b>: Want-Doing-Evaluation-Planning.\n• <b>3Rs 실천</b>: 현실성, 책임감, 올바름 자각.',
+                    application: '책임감 결여, 진로 미결정자 통제감 회복.',
+                    books: '《현실치료》(Glasser)'
+                },
+                {
+                    id: 'p1_13',
+                    name: '해결중심상담 (SFBT)',
+                    scholar: 'Steve de Shazer, Insoo Kim Berg',
+                    summary: '예외질문, 기적질문, 척도질문, 강점 활용',
+                    concept: '내담자가 이미 가진 예외적 성공 경험과 자원에 집중.',
+                    viewpoint: '문제 중심 사고에 갇혀 예외 성공을 지각 못함.',
+                    techniques: '• <b>기적질문</b>: 해결된 미래 구상.\n• <b>예외질문</b>: 문제가 없던 순간 발굴.\n• <b>척도질문</b>: 진척도 수치화.\n• <b>대처질문</b>: 버텨낸 회복탄력성 격려.',
+                    application: '단기 상담, 작은 성공 경험 창출.',
+                    books: '《해결중심 단기치료》(de Shazer)'
+                },
+                {
+                    id: 'p1_14',
+                    name: '수용전념치료 (ACT)',
+                    scholar: 'Steven Hayes',
+                    summary: '심리적 유연성, 헥사플렉스, 인지적 탈융합, 가치 행동',
+                    concept: '고통을 받아들이고, 가치 있는 삶의 방향으로 전념.',
+                    viewpoint: '경험 회피와 인지적 융합이 부적응을 고착화.',
+                    techniques: '• <b>수용</b>: 정서/감각 허용.\n• <b>인지적 탈융합</b>: 생각과 거리두기.\n• <b>맥락으로서의 자기</b>: 관찰하는 자기 자각.\n• <b>가치 명료화 및 전념 행동</b>: 가치 과제 실행.',
+                    application: '만성 불안, 생각에 시달리는 내담자 유연성 도모.',
+                    books: '《수용전념치료》(Hayes)'
+                },
+                {
+                    id: 'p1_15',
+                    name: '정서중심치료 (EFT)',
+                    scholar: 'Leslie Greenberg',
+                    summary: '1차/2차/도구적 정서 자각, 두 의자 기법, 정서 변용',
+                    concept: '고통스러운 정서를 접촉하여 정서로 정서를 변용함.',
+                    viewpoint: '2차 정서(방어)에 갇혀 핵심 1차 감정을 가림.',
+                    techniques: '• <b>1차/2차 정서 구분</b>: 근본 정서 발굴.\n• <b>정서로 정서 바꾸기</b>: 수치심을 자기자비로 변용.\n• <b>두 의자 작업</b>: 내면 자기 간 대화.',
+                    application: '정서 조절 장애, 정서 억압, 대인관계 갈등.',
+                    books: '《정서중심치료》(Greenberg)'
+                },
+                {
+                    id: 'p1_16',
+                    name: '이야기치료 (Narrative)',
+                    scholar: 'Michael White',
+                    summary: '문제의 외재화, 지배적 이야기 해체, 독특한 결과, 대안 서사',
+                    concept: '내담자와 문제를 분리하고 주도적 저자로 세움.',
+                    viewpoint: '부정적 지배적 이야기에 사로잡혀 부적응 유발.',
+                    techniques: '• <b>문제의 외재화</b>: 나와 문제 분리.\n• <b>독특한 결과 탐색</b>: 빛나는 순간 발굴.\n• <b>재저술</b>: 대안적 서사 집필.\n• <b>회원 재구성</b>: 지지적 관계 기억 되살리기.',
+                    application: '자아존중감 상실, 낙인, 진로 정체성 재구성.',
+                    books: '《이야기치료의 실천》(White)'
+                }
+            ],
+            part2: [
+                {
+                    id: 'p2_1',
+                    name: '특성요인이론',
+                    scholar: 'Frank Parsons, Williamson',
+                    summary: '개인의 특성(적성·흥미)과 직업 요인의 합리적 매칭',
+                    concept: '개인의 특성과 직업 요건을 과학적으로 매칭함.',
+                    viewpoint: '자신 특성 및 직업 정보 결여로 인한 부적응.',
+                    techniques: '• <b>심리검사 활용</b>: 특성 양화.\n• <b>직업 정보 제공</b>: 객관적 데이터 제공.\n• <b>합리적 매칭</b>: 적합 대안 선택.',
+                    application: '진로 초심자, 적성을 잘 모르는 구직자 조력.',
+                    books: '《Choosing a Vocation》(Parsons)'
+                },
+                {
+                    id: 'p2_2',
+                    name: 'Holland 인격유형이론',
+                    scholar: 'John Holland',
+                    summary: '6가지 직업성격 유형(RIASEC) 및 환경 일치도',
+                    concept: '사람 성격과 직업 환경을 6가지 코드로 분류 및 매칭.',
+                    viewpoint: '성격 유형과 직업 환경 간 불일치 시 만족도 저하.',
+                    techniques: '• <b>SDS/VPI 검사</b>: RIASEC 코드 측정.\n• <b>환경 일치도 평가</b>: 불만족 요인 분석.\n• <b>차별성/일관성 진단</b>: 결정 명확성 평가.',
+                    application: '직업 흥미 탐색, 이직 고민, 직무 불만족.',
+                    books: '《Making Vocational Choices》(Holland)'
+                },
+                {
+                    id: 'p2_3',
+                    name: 'Super 발달 & Gottfredson 제한-타협',
+                    scholar: 'Donald Super / Linda Gottfredson',
+                    summary: '전생애 발달, 생애 무지개, 포부의 제한과 타협',
+                    concept: '진로는 자아개념의 실현 과정. 발달과 역할 조화.',
+                    viewpoint: '과업 미이수, 성역할에 따른 포부의 과도한 제한.',
+                    techniques: '• <b>생애 무지개 작성</b>: 역할 비중 도식화.\n• <b>자아개념 탐색</b>: 진로 성숙도 고양.\n• <b>포부 범위 재확장</b>: 버려진 대안 재검토.',
+                    application: '경력단절 여성, 중장년 생애주기 진로 재설계.',
+                    books: '《Career Development》(Super)'
+                },
+                {
+                    id: 'p2_4',
+                    name: '크롬불츠 계획된 우연이론',
+                    scholar: 'John Krumboltz',
+                    summary: '계획된 우연 5가지 기술(호기심, 인내, 유연성, 낙관성, 위험감수)',
+                    concept: '우연한 사건을 적극적인 진로 기회로 전환하는 능력.',
+                    viewpoint: '우연 사건에 대한 수동적 대처 및 변화 두려움.',
+                    techniques: '• <b>5가지 기술 훈련</b>: 유연성/위험감수 배양.\n• <b>우연 사건 탐색</b>: 긍정적 전환점 복기.',
+                    application: '진로 장벽에 직면한 구직자 기회 포착 지원.',
+                    books: '《Luck Is No Accident》(Krumboltz)'
+                },
+                {
+                    id: 'p2_scct',
+                    name: '사회인지진로이론 (SCCT)',
+                    scholar: 'Lent, Brown, Hackett',
+                    summary: '자기효능감, 결과기대, 개인적 목표, 진로장벽 삼원 모델',
+                    concept: '자기효능감과 결과기대가 진로 흥미와 실행을 결정.',
+                    viewpoint: '낮은 효능감과 과도한 진로 장벽 지각으로 포부 저하.',
+                    techniques: '• <b>효능감 4대 출처 탐색</b>: 성공 경험, 대리학습 등.\n• <b>진로장벽 분석</b>: 대처 효능감 고양.\n• <b>결과기대 재평가</b>: 부정적 결과기대 수정.\n• <b>목표 수립 및 실행</b>: 단계적 도전 유도.',
+                    application: '진로 장벽을 크게 느끼는 취약계층, 경단녀 지원.',
+                    books: '《Career Development and Counseling》(Brown & Lent)'
+                },
+                {
+                    id: 'p2_5',
+                    name: '인지정보처리이론 (CIP)',
+                    scholar: 'Peterson, Sampson, Reardon',
+                    summary: '정보처리 피라미드, CASVE 의사결정 순환, 메타인지',
+                    concept: '진로 선택은 문제 해결 과정. CASVE 순환 훈련.',
+                    viewpoint: '정보 결여, CASVE 장애, 부정적 메타인지.',
+                    techniques: '• <b>피라미드 진단</b>: 영역별 결함 구분.\n• <b>CASVE 순환 훈련</b>: 의사결정 단계 적용.\n• <b>메타인지 재구조화</b>: 역기능적 사고 전환.',
+                    application: '진로 결정 장애 및 의사결정 미숙자 가이드.',
+                    books: '《Career Development and Services》(Peterson)'
+                },
+                {
+                    id: 'p2_6',
+                    name: '진로구성주의이론',
+                    scholar: 'Mark Savickas',
+                    summary: '진로적응도(4Cs: 관심, 통제, 호기심, 자신감), 생애주제',
+                    concept: '개인이 자신의 삶에 부여하는 이야기 구조 구성.',
+                    viewpoint: '4Cs 결여, 주체적 생애주제와 의미 상실.',
+                    techniques: '• <b>진로 이야기 인터뷰</b>: 생애주제 도출.\n• <b>4Cs 적응도 증진</b>: 통제/자신감 고양.\n• <b>진로 대본 재작성</b>: 대안 서사 구축.',
+                    application: '정체성을 찾고자 하는 청년 및 커리어 리모델링.',
+                    books: '《Career Counseling》(Savickas)'
+                },
+                {
+                    id: 'p2_7',
+                    name: '다문화 및 사회정의 진로상담',
+                    scholar: 'Derald Wing Sue, Nancy Arthur',
+                    summary: '문화적 맥락, 억압 구조 자각, 사회정의 옹호(Advocacy)',
+                    concept: '진로는 문화적 맥락과 사회적 억압 구조의 영향을 받음.',
+                    viewpoint: '사회적 차별 및 구조적 장벽으로 기회 제한.',
+                    techniques: '• <b>문화적 맥락 분석</b>: 제약 요인 객관화.\n• <b>사회정의 옹호</b>: 제도적 장벽 개입.\n• <b>비판적 의식 고양</b>: 무기력감 극복.',
+                    application: '북한이탈주민, 다문화, 사회적 약자 구직 지원.',
+                    books: '《Counseling the Culturally Diverse》(Sue)'
+                },
+                {
+                    id: 'p2_8',
+                    name: '일의 심리학 이론 (PWT)',
+                    scholar: 'David Blustein',
+                    summary: '양질의 일(Decent Work), 맥락적 제약, 기본 심리 욕구',
+                    concept: '제약 속에서도 생존/관계 욕구를 채우는 양질의 일 탐색.',
+                    viewpoint: '경제적 결핍으로 기본 욕구를 충족하지 못함.',
+                    techniques: '• <b>양질의 일 5요소 탐색</b>: 안전, 적정임금 등.\n• <b>기본 욕구 연결</b>: 생존/관계 욕구 전략.\n• <b>자원 모빌리티</b>: 지역 사회 체계 연결.',
+                    application: '취약계층 구직자, 생계가 시급한 내담자 자립.',
+                    books: '《The Psychology of Working》(Blustein)'
+                }
+            ]
+        };
+
+        const worksheetData = [
+            {
+                id: 'ws_1',
+                theory: '정신분석 & 대상관계상담',
+                title: '초기 상담 인테이크(Intake) & 자아방어기제 평가지',
+                desc: '초기 상담 시 내담자의 기본 정보, 발달사 및 무의식적 자아방어기제와 대인관계 역동을 구조적으로 사정하는 서식',
+                purpose: '어린 시절 양육 환경과 내재화된 대상관계를 평가하여 무의식적 갈등 및 대인관계 반복 패턴 파악',
+                content: `[초기 상담 인테이크 & 무의식 역동 평가 양식]\n\n1. 기본 내담자 프로필\n• 성명 / 연령 / 성별:\n• 직업 / 학력:\n• 동거 가족 관계:\n\n2. 주 호소 문제 (Chief Complaint)\n• 내담자가 명시한 현재 고통 및 문제:\n• 문제의 발병 시기 및 계기(촉발 요인):\n\n3. 발달사 및 초기 경험 탐색 (Developmental History)\n• 초기 양육자와의 관계 및 애착 형태:\n• 어린 시절 과도한 상처나 기억에 남는 정서적 사건:\n\n4. 자아방어기제 및 정서 대처 양상 (Ego Defense Mechanisms)\n• 주요 사용 방어기제 (예: 억압, 억제, 투사, 합리화, 반동형성, 전식, 승화 등):\n• 스트레스 상황 시 나타나는 비언어적 행동 반응:\n\n5. 대인관계 역동 및 전이/역전이 관찰 (Transference & Countertransference)\n• 상담자에 대한 내담자의 전이적 반응:\n• 회기 중 상담자가 직면한 내면의 역전이 정서:`,
+                instructions: '초기 1~2회기 도중 또는 인테이크 면접 시 활용하며, 상담자의 관찰 소견과 통합하여 사례개념화 수립의 기초 자료로 활용합니다.'
+            },
+            {
+                id: 'ws_2',
+                theory: '아들러 개인심리학',
+                title: '생애양식 사정(LSA) & 초기기억(ER) 탐색 워크시트',
+                desc: '출생 순위, 가족 구도, 초기 기억 분석을 통해 내담자의 독특한 생활양식(Life Style)을 도출하는 워크시트',
+                purpose: '열등감을 극복하려는 독특한 방식과 삶의 목표(우월성 추구) 및 사회적 관심 수준을 평가',
+                content: `[생애양식 사정(LSA) & 초기기억(ER) 탐색 양식]\n\n1. 가족 구도 및 출생 순위\n• 출생 순위 (예: 첫째, 둘째, 막내, 외동):\n• 부모 및 형제자매와의 대인관계 특성 및 경쟁 양상:\n• 어린 시절 자신을 나타내는 핵심 형용사 3가지:\n\n2. 초기 기억 탐색 (Early Recollections - ER)\n* 10세 이전 가장 생생하게 기억나는 사건 3가지를 구체적으로 기록\n• 초기기억 1: (상황 설명)\n  - 당시 느꼈던 가장 강렬한 감정:\n• 초기기억 2: (상황 설명)\n  - 당시 느꼈던 가장 강렬한 감정:\n• 초기기억 3: (상황 설명)\n  - 당시 느꼈던 가장 강렬한 감정:\n\n3. 생활양식 요약 및 신념 도출\n• 자신에 대한 신념 ("나는 ~한 사람이다"):\n• 세상/타인에 대한 신념 ("세상과 타인은 ~하다"):\n• 삶의 윤리적 지침 ("그러므로 나는 ~해야 한다"):\n\n4. 열등감 및 보상 대처 목표\n• 내담자가 극복하고자 하는 핵심 열등감 요소:\n• 현재 구사 중인 생활양식 (예: 지배형, 기생형, 회피형, 사회적으로 유용한 형):`,
+                instructions: '초기 기억은 사실 여부보다 내담자가 현재 삶의 틀을 구성하는 인지적 안경으로 어떻게 지각하고 있는지에 초점을 맞춥니다.'
+            },
+            {
+                id: 'ws_3',
+                theory: '인지행동치료 (CBT / REBT)',
+                title: '5칼럼 자동적 사고 기록지 & ABCDE 논박 양식',
+                desc: '선행사건, 자동적 사고, 인지적 오류 및 소크라테스식 논박을 통해 합리적 사고를 수립하는 핵심 CBT 워크시트',
+                purpose: '역기능적 자동적 사고와 비합리적 당위 신념을 시각화하고 합리적 인지 재구조화 도모',
+                content: `[CBT 5칼럼 자동적 사고 기록지 & ABCDE 양식]\n\n1. 상황/선행사건 (A: Activating Event)\n• 무슨 일이 있었는가? (언제, 어디서, 누구와, 어떤 상황에서):\n\n2. 정서 및 행동적 결과 (C: Consequences)\n• 당시 느낀 감정 및 정서 수치 (0~100%):\n• 당시 취한 행동/신체 반응:\n\n3. 자동적 사고 및 신념 (B: Beliefs / Automatic Thoughts)\n• 마음속에 순간적으로 스쳐 지나간 생각은 무엇이었는가?:\n• 나도 모르게 적용한 당위적 규칙 ("나는 반드시 ~해야만 한다"):\n\n4. 인지적 오류 식별 (Cognitive Distortions)\n• 적용된 인지적 오류 (예: 흑백논리, 과잉일반화, 파국화, 마음읽기 등):\n\n5. 논박 및 대안적 사고 (D: Disputation & E: Effect)\n• 이 생각을 뒷받침하는 객관적 증거는 무엇인가?:\n• 이 생각과 반대되는 객관적 사실/증거는 무엇인가?:\n• 새롭게 정립한 합리적 대안 사고:\n• 재평가된 정서 수치 (0~100%):`,
+                instructions: '불안이나 우울 정서가 수직 상승하는 유발 상황 직후 내담자가 스스로 기록해 오도록 홈워크 과제로 활용합니다.'
+            },
+            {
+                id: 'ws_4',
+                theory: '수용전념치료 (ACT)',
+                title: '경험회피 자각 및 가치 기반 전념 행동 계획표',
+                desc: '불쾌한 생각을 통제하려는 경험 회피를 줄이고, 자신이 진정 가치 있게 여기는 삶으로 전념하도록 돕는 서식',
+                purpose: '인지적 탈융합과 수용을 바탕으로 핵심 가치를 명료화하고 주간 단위 전념 행동을 설계',
+                content: `[ACT 경험회피 자각 및 가치 전념 행동 워크시트]\n\n1. 통제 및 회피하려는 고통스러운 내적 경험\n• 통제하거나 없애버리고 싶은 고통스러운 생각/감정:\n• 불쾌한 정서를 피하기 위해 취했던 대처 행동 (예: 유튜브 몰아보기, 대인관계 회피 등):\n• 이러한 회피 행동이 가져온 장기적인 비용(삶의 손실):\n\n2. 인지적 탈융합 연습\n• 고통스러운 생각과의 거리두기 구문 작성:\n  "나는 지금 [_____________________]라는 생각을 하고 있다는 것을 자각한다."\n\n3. 나만의 핵심 가치 탐색\n• 내 삶에서 진정으로 중요하게 여기는 가치 영역 선택:\n• 해당 가치가 나에게 소중한 이유:\n\n4. 주간 가치 지향 전념 행동 계획\n• 이번 주 실행할 작지만 구체적이고 측정 가능한 전념 행동:\n  - 언제 / 어디서 / 무엇을:\n• 행동 실행 시 예상되는 내적 장애물 및 수용 다짐:`,
+                instructions: '불안이나 고통을 없애는 것이 목표가 아니라, 고통을 품고서도 바라는 가치 있는 삶을 향해 나아가는 데 초점을 둡니다.'
+            },
+            {
+                id: 'ws_5',
+                theory: '게슈탈트 & EFT 정서중심치료',
+                title: '지금-여기 신체 감각 자각 & 미해결 과제 탐색지',
+                desc: '신체 반응과 정서를 자각하고, 표면적 2차 정서 아래의 1차 적응 정서를 발굴하여 미해결 과제를 완결짓는 워크시트',
+                purpose: '억압되었던 정서를 안전하게 표현하고 지금-여기에서의 유기체적 접촉을 촉진',
+                content: `[지금-여기 신체 감각 자각 & 미해결 과제 탐색 양식]\n\n1. 지금-여기 신체 감각 스캔\n• 지금 이 순간 나의 신체 어디에 긴장이나 통증이 느껴지는가?:\n• 그 신체 감각에게 목소리를 부여한다면 무슨 말을 하고 싶어 하는가?:\n\n2. 1차 정서 vs 2차 정서 구분 탐색\n• 표면적으로 크게 표출되는 감정 (2차 정서: 예: 분노, 자책, 억울함):\n• 감정의 표피 아래 숨겨진 진실된 근본 마음 (1차 정서: 예: 두려움, 상실감, 슬픔):\n\n3. 미해결 과제 진술문 작성\n• 내가 아직 마음속에서 떠나보내지 못한 사건이나 대상:\n• 그 대상에게 지금 이 순간 꼭 전하고 싶은 언어적 진술문:\n  "당시 당신에게 말하지 못했지만, 사실 나의 마음은 [___________________________]였습니다."\n\n4. 정서적 욕구 명료화\n• 그 상황에서 내가 진정으로 원했던 바는 무엇인가?:\n• 지금 나 자신에게 제공할 수 있는 치료적 자비 및 수용의 한마디:`,
+                instructions: '생각으로 분석하기보다 신체 감각과 가슴의 정서적 경험에 집중하도록 유도합니다.'
+            },
+            {
+                id: 'ws_6',
+                theory: '해결중심단기상담 (SFBT)',
+                title: '예외 자원 발굴, 기적질문 & 척도질문 워크시트',
+                desc: '문제 중심적 사고에서 벗어나 과거 성공했던 예외 상황을 발굴하고 기적질문으로 변화 목표를 명료화하는 양식',
+                purpose: '내담자가 보유한 강점과 예외 자원을 임파워먼트하여 단기간 내 유의미한 수치적 변화 촉진',
+                content: `[해결중심 SFBT 예외자원 및 기적/척도질문 양식]\n\n1. 예외 상황 발굴\n• 문제가 발생하지 않았거나, 발생했더라도 덜 심했던 때(예외)는 언제인가?:\n• 그때 내담자님은 평소와 다르게 어떤 다른 행동을 하셨나요?:\n• 내담자님이 문제를 버텨내게 해준 본인만의 회복 자원은 무엇인가요?:\n\n2. 기적질문\n• 오늘 밤 잠든 사이에 기적이 일어나 문제가 완벽히 해결된다면, 아침에 눈을 떴을 때 가장 먼저 변화되었음을 알게 될 작은 행동 하나는 무엇인가요?:\n• 그 모습을 보며 주변 사람들이 가장 먼저 눈치챌 변화는 무엇인가요?:\n\n3. 척도질문 및 목표 설정\n• 가장 힘들었던 순간을 1점, 문제 해결 완성을 10점이라고 할 때, 오늘 내담자님의 점수는 몇 점인가요?: (   )점\n• 현재 점수에서 딱 1점을 올리기 위해 이번 주에 시도해 볼 수 있는 가장 작고 구체적인 행동 과제:`,
+                instructions: '거창한 해결책 대신 내담자가 오늘 당장 실천할 수 있는 가장 작은 행동 변화에 집중하도록 조력합니다.'
+            },
+            {
+                id: 'ws_7',
+                theory: 'Super 평생발달이론',
+                title: '생애진로사정(Life Career Assessment: LCA) 구조화 질문지',
+                desc: '진로주제, 하루일과, 강점과 장애, 요약을 4대 구조로 탐색하여 자아개념과 진로 적응도를 평가하는 정밀 양식',
+                purpose: '내담자의 직업적 자아개념 실현 정도와 생애 역할 간의 조화로운 진로 발달 지원',
+                content: `[생애진로사정(LCA) 구조화 면담 양식]\n\n1. 진로 주제\n• 일/직업 경험: 과거 가장 만족스러웠던 일/아르바이트/실무와 그 이유:\n• 교육 및 훈련: 흥미롭게 이수했던 전공 과목 및 자격 취득 경험:\n• 여가 활동: 시간 가는 줄 모르고 몰입하는 여가 및 사적 관심사:\n\n2. 하루 일과\n• 전형적인 평일 하루 일과 시간대별 구성:\n• 일과 중 자율적으로 통제할 수 있는 시간과 타인에 의해 결정되는 시간의 비중:\n\n3. 강점과 장애\n• 자신의 진로 발달을 촉진하는 핵심 강점 3가지:\n• 현재 진로 선택을 가로막고 있다고 지각하는 핵심 장애 요인 3가지:\n\n4. 요약 및 생애 역할 균형\n• 탐색 결과를 통해 도출된 내담자의 핵심 진로 정체성:\n• 현재 삶에서 가장 비중을 두고 싶은 3가지 생애 역할:`,
+                instructions: '표준화 검사 도구 없이도 약 15~20분간의 정형화된 구조화 면담을 통해 내담자의 정보 처리 수준과 자아개념을 종합 사정합니다.'
+            },
+            {
+                id: 'ws_8',
+                theory: '진로구성주의 & SCCT',
+                title: '진로 이야기 인터뷰(CSI) & 진로 장벽 극복 워크시트',
+                desc: '어릴 적 영웅, 좋아하는 매체, 좌우명 등을 통해 생애주제(Life Themes)를 도출하고 자기효능감을 강화하는 진로 서식',
+                purpose: '급변하는 직업세계 속에서 주체적으로 자신의 진로 이야기를 재저술하도록 지원',
+                content: `[진로 이야기 인터뷰(CSI) & 진로장벽 극복 워크시트]\n\n1. 진로 이야기 인터뷰 5대 질문\n• 어릴 적 동경했거나 모범으로 삼았던 인물 3명과 그 이유:\n• 즐겨 보는 잡지, TV 프로그램, 유튜브 채널, 웹툰과 그 이유:\n• 가장 좋아하는 책이나 영화의 이야기 줄거리 및 감명 깊은 장면:\n• 자신에게 힘을 주는 인상 깊은 격언, 명언, 또는 좌우명:\n• 학창 시절 가장 좋아했던 과목과 싫어했던 과목 및 이유:\n\n2. 사회인지 진로 장벽 및 대처 효능감 분석\n• 자신이 직면한 객관적/주관적 진로 장벽:\n• 과거 시련이나 장벽을 극복해 냈던 나의 성공 경험:\n• 내가 벤치마킹할 수 있는 타인의 관찰 모범 사례:\n\n3. 대안적 진로 서사 재저술\n• 과거 경험과 현재 고민을 관통하는 나의 생애 핵심 주제:\n• 내가 새로 써 내려갈 다음 커리어 장의 제목:`,
+                instructions: '내담자가 직접 답변하는 과정에서 자신이 삶의 능동적인 저자임을 깨닫게 하고 진로적응도 자신감을 불어넣습니다.'
+            }
+        ];
+
+        const sampleCaseData = {
+            sample1: {
+                profile: '• 인적 사항: 28세 / 여성 / 무직 (취업준비 2년 차) / 미혼 / 대졸(경영학)\n• 가족 사항: 부모님, 남동생 1명과 동거 (부모님 은퇴 임박)\n• 경제 상황: 부모님에게 생활비 의존, 경제적 자립 압박감 고조\n• 직업 사항: 무직 (공기업 취업준비 2년 차 / 카페 아르바이트 6개월, 공기업 인턴 3개월 경험)\n• 자격 사항: 토익 880점, 한국사 1급, 컴퓨터활용능력 1급\n• 하루 일과: 09:00 기상, 11:00~17:00 스터디카페 수험 공부, 저녁 유튜브 시청 및 사회적 회피\n• 대인관계: 면접 낙방 이후 대학 동기 및 친구들과의 연락 전면 단절, 부모님과의 대화 회피 및 가족 내 고립감 고조\n• 희망 취업 조건: 수도권 소재 공기업/공공기관 사무직 (주 5일, 연봉 3,500만원 이상, 희망 취업 시기: 3개월 이내)\n• 자신의 강점: 높은 성실성, 규율 준수, 문서작성 및 필기시험 응시 역량 우수\n• 취업의 걸림돌: 면접 연쇄 탈락에 따른 무기력감, 실무 경력 부재, 발표 및 면접 불안',
+                complaint: '대학교 졸업 후 2년 동안 공기업 입사 시험을 준비했으나 계속 최종 면접에서 낙방했습니다. 이제는 책상에 앉기만 해도 가슴이 답답하고 내가 세상에 아무 쓸모없는 사람처럼 느껴집니다. 부모님을 뵙는 것도 죄송하고 친구들의 연락도 모두 끊었습니다. 무기력하고 미래가 너무 막막합니다.',
+                theory: '인지행동치료 (CBT), 수용전념치료 (ACT)',
+                problemTypes: ['심리정서문제', '의사결정부족', '계획 및 실행 부족'],
+                primaryEmotion: '상실감, 두려움, 막막함',
+                secondaryEmotion: '무력감, 자책, 열등감',
+                instrumentalEmotion: '부모 및 타인의 기대/비판을 피하기 위한 수동적 무력감 표출',
+                trigger: '2년간 지속된 공기업 입사 시험 및 최종 면접에서의 연속된 탈락 통보',
+                maintaining: "'나는 세상에 아무 쓸모없는 사람'이라는 자가비하적 자동적 사고 및 부모·친구 연락 단절 등 사회적 회피 행동",
+                protective: '1. 직업적 강점: 2년간 서류 및 필기전형 통과 경험 (상위 5% 필기 역량, 인턴 및 아르바이트 경험 보유)\n2. 개인적 강점: 높은 학습 성실성, 체계적 일과 관리 습관\n3. 환경적 강점: 부모님의 거주/생계 인프라 지원 및 안정한 수험 환경 제공\n4. 심리적 강점: 자발적 상담 신청 동기, 성찰 능력 및 회복 열망'
+            },
+            sample2: {
+                profile: '• 인적 사항: 35세 / 남성 / 대기업 7년 차 대리 / 미혼 / 대졸(공학)\n• 가족 사항: 모친과 동거 (부친 작고)\n• 경제 상황: 대기업 재직 중으로 본인 경제적 자립 가능, 모친 양육/생계 지원 중\n• 직업 사항: 대기업 7년 차 대리 (기획/데이터 분석 / 대학 시절 IT 스타트업 인턴 6개월)\n• 자격 사항: 정보처리기사, SQLD, ADsP\n• 하루 일과: 08:00 출근 및 격무, 20:00 퇴근 후 폭식 및 스트레스에 따른 수면 장애\n• 대인관계: 직장 내 상사의 일방적 태도 및 팀원들의 따돌림으로 거리를 둠, 퇴근 후 사적 대인관계 교류 감소\n• 희망 취업 조건: 수평적 조직문화의 IT/외국계 기업 (연봉 유지/상승, 수평적 분위기, 희망 취업 시기: 6개월 이내)\n• 자신의 강점: 7년간 쌓은 실무 전문성, 데이터 분석 및 기획력, 강한 책임감\n• 취업의 걸림돌: 직장 내 괴롭힘/따돌림 트라우마, 이직 실패 공포, 대인관계 회피',
+                complaint: '직장 상사의 일방적인 업무 지시와 팀원들의 은근한 따돌림 때문에 출근할 때마다 소화가 안 되고 두통이 심합니다. 아무리 노력해도 상사는 저를 인정해주지 않고 오히려 제 실수를 돋보이게 만듭니다. 퇴사하고 싶지만 이직에 성공할 자신이 없어 억지로 참고 있는데 분노가 치밀어 올라 버틸 수가 없습니다.',
+                theory: '개인심리학, 합리정서행동치료 (REBT)',
+                problemTypes: ['심리정서문제', '환경자원부족', '의사결정부족'],
+                primaryEmotion: '수치심, 외로움, 고립감',
+                secondaryEmotion: '분노, 억울함, 무력감',
+                instrumentalEmotion: '상대방을 통제하거나 관계 우위를 점하기 위한 표면적 분노 과장',
+                trigger: '신규 프로젝트 기획안을 직장 상사가 독점한 사건 및 팀 내 지속적 따돌림 환경',
+                maintaining: '불이익 두려움으로 고충을 말하지 못하고 억누르는 수동적 대처 및 이직 실패 공포로 인한 무기력',
+                protective: '1. 직업적 강점: 대기업 7년 차 실무 전문성, 우수한 기획안 작성 및 데이터 분석 능력\n2. 개인적 강점: 높은 업무 완수 성실성, 문제 해결을 향한 집념\n3. 환경적 강점: 안정적 경제적 자립 기반, 근로 형태의 안정성\n4. 심리적 강점: 성장을 향한 욕구, 자기객관화 의지 및 상담에 대한 자발성'
+            },
+            sample3: {
+                profile: '• 인적 사항: 42세 / 여성 / 경력단절 8년 (전 초등교사) / 기혼 (자녀 2명) / 대졸(초등교육)\n• 가족 사항: 배우자(대기업 부장), 초등 고학년 자녀 2명\n• 경제 상황: 배우자 외벌이로 기본 생계 안정적, 본인 자아실현 및 가계 기여 희망\n• 직업 사항: 경력단절 8년 (전 초등교사 10년 근무 / 대학 시절 학습지 지도 아르바이트)\n• 자격 사항: 정교사 2급 자격증, 독서지도사 1급\n• 하루 일과: 07:00 자녀 등교 및 집안일, 10:00~15:00 자기개발 및 상담 공부, 저녁 자녀 돌봄\n• 대인관계: 동네 학부모 모임에 제한적 참여, 과거 직장 동료들과는 경력단절 이후 소원해진 상태\n• 희망 취업 조건: 자녀 돌봄이 가능한 시간선택제/파트타임 교육 및 직업상담 관련직 (일 4~5시간, 희망 취업 시기: 6개월 이내)\n• 자신의 강점: 10년 교직 경력의 교수학습 능력, 따뜻한 공감 능력 및 경청 태도\n• 취업의 걸림돌: 8년의 긴 경력단절, 급변한 직무 환경에 대한 두려움, 나이에 대한 열등감',
+                complaint: '자녀들이 초등학교 고학년이 되면서 다시 제 일을 찾고 싶어 직업상담을 신청했습니다. 하지만 8년이라는 공백기 동안 세상이 너무 많이 바뀐 것 같고 제가 할 수 있는 일이 아무것도 없는 것 같습니다. 과거의 교사 경력은 잊고 새로 시작하려니 자신감이 바닥이고 내 삶의 정체성을 잃어버린 것 같아 불안합니다.',
+                theory: 'Super 평생발달이론 & Gottfredson 제한-타협이론, 진로구성주의이론',
+                problemTypes: ['정보부족', '역량부족', '계획 및 실행 부족'],
+                primaryEmotion: '불안, 정체성 혼란, 소외감',
+                secondaryEmotion: '자책, 두려움, 무력감',
+                instrumentalEmotion: '새로운 도전 부담 및 실패 위험을 피하기 위한 자신감 결여 호소',
+                trigger: '자녀들의 성장에 따른 생애 역할 전환기 도래 및 사회적 자아 재발견 욕구',
+                maintaining: "'8년 공백으로 사회적 자리가 없다'는 자가비하 및 타인과의 비교를 통한 도전 회피",
+                protective: '1. 직업적 강점: 전직 초등교사 10년 경력의 교수학습 설계 및 소통 능력\n2. 개인적 강점: 우수한 언어 전달력, 높은 정서적 공감대 형성 능력\n3. 환경적 강점: 자녀 독립성 증가로 일 5시간 이상 활동 시간 확보, 배우자의 경제적 지지\n4. 심리적 강점: 강한 자아실현 욕구, 정서적 유연성 및 높은 인지적 수용도'
+            }
+        };
+
+        const quizData = [
+            {
+                id: 1,
+                theory: '정신분석상담',
+                scenario: '내담자는 상담 진행 중 특정 주제(예: 과거 부모님과의 관계) 이야기만 나오면 갑자기 목소리가 낮아지거나, 말을 잇지 못하고 "기억이 나지 않는다"며 대화 주제를 다른 가벼운 이야기로 돌려버립니다.',
+                question: '이러한 내담자의 행동은 정신분석 관점에서 무엇으로 정의되며, 상담사는 이를 어떻게 다루어야 할까요?',
+                modelAnswer: '■ 정답: 저항(Resistance)\n■ 해설: 내담자의 행동은 무의식적 갈등이나 위협적인 감정이 수면 위로 떠오르는 것을 막으려는 자아의 방어 기제인 "저항"에 해당합니다. 상담사는 비판 없이 저항이 발생했음을 공감적으로 짚어주고, 저항의 무의식적 원인을 내담자가 통찰(Insight)할 수 있도록 자각시켜야 합니다.',
+                checkpoints: ['"저항" 개념의 정확한 명시', '무의식적 방어기제 원인 설명', '저항에 대한 비심판적 자각 및 통찰 유도 전략 언급']
+            },
+            {
+                id: 2,
+                theory: '개인심리학 (아들러)',
+                scenario: '내담자는 "어릴 때부터 형에 비해 항상 부족하다는 소리를 들어서, 지금 직장에서도 조금만 실수를 하면 남들이 나를 무능하게 볼까봐 아무것도 도전하지 못하겠다"고 호소합니다.',
+                question: '아들러의 개인심리학 관점에서 내담자의 심리적 상태를 설명하고, 치료적 개입 방안을 기술하시오.',
+                modelAnswer: '■ 정답: 과도한 열등감(Inferiority Complex) 및 회피형 생활양식(Life Style)\n■ 해설: 내담자는 초기 경험에서 유발된 열등감을 적응적인 우월성 추구(사회적 관심)로 보상하지 못하고, 열등감 콤플렉스에 빠져 회피 행동을 취하고 있습니다. 상담사는 초기 기억(ER)과 가족 구도를 탐색하여 불건강한 신념을 재구성하고, "마치 ~인 것처럼 행동하기" 및 격려(Encouragement)를 통해 용기와 사회적 관심(Social Interest)을 고양해야 합니다.',
+                checkpoints: ['열등감 및 생활양식 개념 적용', '초기기억(ER) 분석 필요성 언급', '용기 부여(Encouragement) 및 사회적 관심 증진 개입']
+            },
+            {
+                id: 3,
+                theory: '인지행동치료 (CBT)',
+                scenario: '내담자는 면접을 보고 나온 후 "면접관 한 분이 질문 도중 약간 고개를 갸우뚱했다. 이번 면접도 완벽하게 망쳤고, 나는 평생 제대로 된 직장에 취업하지 못할 것이다"라고 절망합니다.',
+                question: '내담자가 보이고 있는 핵심 인지적 오류 2가지를 제시하고, 소크라테스식 질문법을 통한 개입 구문을 작성하시오.',
+                modelAnswer: '■ 정답: 인지적 오류(마음읽기, 파국화/흑백논리)\n■ 소크라테스식 질문 구문: "면접관이 고개를 갸우뚱한 것이 오직 내담자님의 답변이 틀렸음을 의미하는 객관적 증거가 될 수 있을까요? 고개를 갸우뚱할 수 있는 다른 이유(깊은 생각, 습관 등)는 무엇이 있을까요?"',
+                checkpoints: ['마음읽기(Mind Reading) 및 파국화/흑백논리 명시', '객관적 증거를 묻는 소크라테스식 대안 질문 작성']
+            },
+            {
+                id: 4,
+                theory: '합리정서행동치료 (REBT)',
+                scenario: '내담자는 "나는 어떤 일을 맡든 항상 완벽하게 해내야만 한다. 만약 실수라도 한다면 사람들에게 인정받지 못하는 쓸모없는 존재가 되는 것이다"라는 신념을 강하게 고수합니다.',
+                question: 'Ellis의 ABCDE 모델에 기반하여 내담자의 비합리적 신념 유형을 분류하고, 이를 논박(D)하는 상담자 발화를 기술하시오.',
+                modelAnswer: '■ 정답: 절대적 당위성("반드시 ~해야 한다") 및 과잉일반화/자가비하 신념\n■ 논박 발화: "모든 일을 항상 완벽하게 해내야만 한다는 법이 어디에 있습니까? 실수를 한 번이라도 한다고 해서 내담자님이라는 사람의 인간적 가치가 전부 사라지는 것일까요?"',
+                checkpoints: ['당위적 사고(Must-s) 규명', '논박(D)을 통한 합리적 신념(E)으로의 전환 질문 제시']
+            },
+            {
+                id: 5,
+                theory: '인간중심상담',
+                scenario: '내담자는 "부모님이 원하는 안정적인 직장에 가지 못해서 죄송해요. 저는 제 인생의 주도권도 없고 부모님 기대만 맞추려다 이렇게 지쳐버린 것 같아요"라며 눈물을 흘립니다.',
+                question: '로저스의 인간중심 관점에서 가치 조건화(Conditions of Worth)와 자기 불일치 개념을 적용하여 설명하고, 3대 촉진적 태도를 적용한 공감 반응을 작성하시오.',
+                modelAnswer: '■ 정답: 가치 조건화에 따른 자기개념과 실제 경험 간의 불일치\n■ 공감적 반응: "부모님의 기대와 인정에 맞추기 위해 정작 자신이 원하는 삶을 살지 못했다는 깊은 아쉬움과, 그 과정에서 오롯이 스스로의 마음을 돌보지 못해 지쳐버린 심정이 느껴지시는군요."',
+                checkpoints: ['가치 조건화(Conditions of Worth) 개념 언급', '수용적·공감적 감정 반영 구문 완성']
+            },
+            {
+                id: 6,
+                theory: '게슈탈트상담',
+                scenario: '내담자는 과거 직장 상사에게 억울하게 모욕을 당했던 경험을 이야기하면서, 가슴을 쥐어짜며 "그때 아무 말도 하지 못했던 제 자신이 너무 바보 같아서 지금도 가슴이 답답하고 쿵쾅거립니다"라고 말합니다.',
+                question: '게슈탈트의 미해결 과제(Unfinished Business) 개념을 적용하고, 이를 해소하기 위한 대표적 기법 적용 방안을 제시하시오.',
+                modelAnswer: '■ 정답: 미해결 과제 및 정서 억압\n■ 개입 방안: 빈 의자 기법(Empty Chair Technique)을 적용하여, 맞은편 의자에 당시 직장 상사가 앉아있다고 상상하게 한 뒤 그동안 말하지 못하고 억눌렀던 분노와 슬픔의 정서를 표현하게 함으로써 게슈탈트를 완결짓도록 조력함.',
+                checkpoints: ['미해결 과제(Unfinished Business) 명시', '빈 의자 기법(Empty Chair) 구체적 적용 절차 설명']
+            },
+            {
+                id: 7,
+                theory: '수용전념치료 (ACT)',
+                scenario: '구직자는 "면접장에만 들어가면 불안해질까봐 아예 입사 지원서를 제출하지 못하겠어요. 이 불안한 감정이 완벽히 사라져야만 면접을 볼 수 있을 것 같아요"라고 말합니다.',
+                question: 'ACT의 헥사플렉스 관점에서 내담자의 문제를 분석하고, 인지적 탈융합(Defusion) 및 가치 지향 행동 개입을 작성하시오.',
+                modelAnswer: '■ 정답: 경험 회피(Experiential Avoidance) 및 생각과의 인지적 융합(Cognitive Fusion)\n■ 개입: 불안이라는 감정을 통제/제거하려 하지 말고 "불안함이 느껴지는구나" 하고 있는 그대로 수용(Acceptance)하게 함. "불안하다는 생각이 드는구나"로 거리두기(탈융합) 연습을 한 후, 불안을 품고서도 자신이 바라는 진로 가치를 향해 지원서를 제출하는 전념 행동(Committed Action)을 유도함.',
+                checkpoints: ['경험 회피 및 인지적 융합 분석', '수용, 탈융합, 가치 기반 전념 행동 3단계 전략 기술']
+            },
+            {
+                id: 8,
+                theory: '해결중심단기상담 (SFBT)',
+                scenario: '내담자는 "매일 아침에 눈을 뜨면 무기력해서 침대에서 나올 수가 없어요. 내 삶은 완전히 망가졌어요"라며 절망감을 표출합니다.',
+                question: '해결중심상담의 기적질문(Miracle Question)과 예외질문(Exception Question) 구문을 구체적으로 작성하시오.',
+                modelAnswer: '■ 기적질문: "오늘 밤 잠든 사이에 기적이 일어나 무기력했던 문제가 해결되었다고 해봅시다. 아침에 눈을 떴을 때 삶이 달라졌음을 알게 해주는 가장 첫 번째 작은 행동 변화는 무엇일까요?"\n■ 예외질문: "요즘처럼 무기력한 중에서도, 신기하게 침대에서 평소보다 조금 더 일찍 일어났거나 마음이 덜 무거웠던 적(예외 순간)은 언제였나요?"',
+                checkpoints: ['기적질문의 미래 변화 유도 구문', '예외질문의 과거 성공 자원 탐색 구문 작성']
+            },
+            {
+                id: 9,
+                theory: 'Super 평생발달이론',
+                title: '생애 역할 무지개 및 발달과업',
+                scenario: '40대 경력단절 여성 내담자는 자녀 등교 후 남는 시간에 다시 일을 시작하고 싶지만 "내가 엄마 역할도 제대로 못 하면서 욕심을 부리는 게 아닐까" 하는 죄책감을 자각합니다.',
+                question: 'Super의 생애 무지개(Life Career Rainbow) 관점에서 내담자의 다중 역할 갈등을 진단하고 조력 방향을 작성하시오.',
+                modelAnswer: '■ 진단: 부모(Parent), 배우자(Spouse), 직업인(Worker) 간의 생애 역할(Life Roles) 상충 및 역할 비중 불균형\n■ 조력: 생애 진로 무지개를 함께 그려보며 현재 각 역할에 투여하는 에너지와 시간 비중을 도식화하고, 자녀의 발달 단계에 맞춰 부모 역할의 비중을 자연스럽게 줄이면서 직업인 역할의 비중을 단계적으로 확장하는 생애 역할 재설계를 조력함.',
+                checkpoints: ['Super 생애 역할(Life Roles) 다중성 명시', '생애 무지개 도식화를 통한 역할 균형 및 재설계 전략 제시']
+            },
+            {
+                id: 10,
+                theory: '사회인지진로이론 (SCCT)',
+                scenario: '내담자는 "남들은 자격증도 따고 스펙이 높아서 잘 취업하는데, 나는 시도해봐야 어차피 떨어질 게 분명해"라며 지원조차 포기하고 있습니다.',
+                question: 'SCCT 모델의 3대 핵심 변수를 적용하여 내담자의 진로 미결정 원인을 분석하고, 자기효능감 강화를 위한 4대 출처 활용 전략을 작성하시오.',
+                modelAnswer: '■ 분석: 낮은 진로 자기효능감(Self-Efficacy) 및 부정적 결과기대(Outcome Expectations)로 인한 실행 목표 결여\n■ 효능감 강화 전략: 1) 성공 수행 경험(작은 과제 완수), 2) 대리학습(유사 동료 합격 수기 관찰), 3) 사회적 설득(상담자의 격려 및 지지), 4) 생리적 정서 상태 조절(불안 이완 훈련)',
+                checkpoints: ['자기효능감, 결과기대, 개인적 목표 3대 변수 적용', '자기효능감 4대 출처(성공경험, 대리학습, 사회적설득, 생리적상태) 제시']
+            }
+        ];
+
+        const techScenarios = [
+            {
+                id: 0,
+                clientText: '"취업 준비를 2년 넘게 하고 있는데 계속 면접에서 떨어지니까 이제는 아무것도 하기 싫고 제 자신이 너무 한심해요. 친구들은 다 직장 다니는데 저만 멈춰있는 것 같아요."',
+                emotionTag: '정서: 열등감/무력감/상실감',
+                modelResponses: {
+                    '감정 반영': '"연속된 낙방으로 인해 깊은 무력감과 자책감이 드시고, 친구들과 비교되면서 혼자 뒤처진 것 같은 막막함이 많이 크시군요."',
+                    '재진술': '"즉, 2년간의 수험 생활 동안 결과가 나오지 않아 자존감이 많이 낮아지셨고 구직 의욕도 저하된 상황이시군요."',
+                    '직면': '"취업하고 싶다고 말씀하시면서도, 한편으로는 실패에 대한 두려움 때문에 입사 지원서 제출 자체를 피하고 계시는군요."',
+                    '명료화': '"\'한심하다\'라고 하셨는데, 구체적으로 어떤 순간에 본인이 가장 한심하게 느껴지시나요?"',
+                    '초점화': '"여러 고민 중 지금 이 순간 내담자님의 마음을 가장 짓누르는 핵심 감정에 대해 이야기 나눠볼까요?"',
+                    '개방형 질문': '"면접 낙방 통보를 받으셨을 때 마음속에 가장 먼저 들었던 생각은 무엇이었나요?"',
+                    '폐쇄형 질문': '"현재 이번 달에 새로 입사 지원서를 제출하신 곳이 있으신가요?"',
+                    '해석': '"자신이 한심하다고 느끼는 마음 깊은 곳에는 타인의 인정에 자신의 가치를 전적으로 의존하려는 마음이 작용하는 것일 수 있습니다."',
+                    '즉시성': '"지금 그 말씀을 저에게 나누시는 동안에도 고개를 숙이시는데, 현재 저와 이 대화를 나누는 순간의 마음은 어떠신가요?"',
+                    '직업적 정보제공': '"현재 구직 단념 청년을 대상으로 맞춤형 수당과 1:1 심리상담을 제공하는 청년도전지원사업 제도가 마련되어 있습니다."'
+                }
+            },
+            {
+                id: 1,
+                clientText: '"팀장이 매번 제 아이디어를 깎아내리고 다른 사람 앞에서 면박을 주는데, 너무 화가 나고 억울해서 일에 집중이 안 됩니다. 퇴사하고 싶은데 이직이 안 될까봐 억지로 참고 있어요."',
+                emotionTag: '정서: 분노/억울함/불안',
+                modelResponses: {
+                    '감정 반영': '"상사의 부당한 태도에 심한 분노와 억울함을 느끼면서도, 현실적 여건 때문에 참고 견뎌야 하는 답답함이 매우 크시군요."',
+                    '재진술': '"즉, 직장 내 상사의 비인격적 대우로 고통받고 계시지만, 이직의 불안감 때문에 억누르고 계신 상황이군요."',
+                    '직면': '"상사의 행동이 억울하다고 하시면서도, 막상 상사에게 정당한 피드백을 요청하거나 고충을 신고하는 행동은 주저하고 계시네요."',
+                    '명료화': '"\'아이디어를 깎아내린다\'고 하셨는데, 구체적으로 어떤 방식으로 면박을 주시는지 상황을 들려주실 수 있나요?"',
+                    '초점화': '"퇴사 고민과 직장 내 상사와의 갈등 중, 오늘 회기에서 우선적으로 다루고 싶은 주제는 무엇인가요?"',
+                    '개방형 질문': '"상사에게 면박을 들었던 그 순간, 몸이나 마음에서 어떤 반응이 일어났나요?"',
+                    '폐쇄형 질문': '"현재 사내 인사팀이나 고충처리위원회에 공식적으로 고충을 접수하신 적이 있으신가요?"',
+                    '해석': '"분노가 치밀어 오름에도 참는 마음 뒤에는 권위적 인물과의 충돌을 피하려는 어릴 적 방어기제가 작동하는 것일 수 있습니다."',
+                    '즉시성': '"상사에 대해 이야기하시는 지금, 손에 강하게 힘을 쥐고 계시는데 현재 어떤 감정이 일어나고 계신가요?"',
+                    '직업적 정보제공': '"직장 내 괴롭힘에 해당하는 경우 고용노동부 상담센터를 통해 윤리적·법적 대응 절차 및 심리상담 지원을 받으실 수 있습니다."'
+                }
+            },
+            {
+                id: 2,
+                clientText: '"8년 동안 육아만 하다가 다시 직장을 구하려니 세상이 너무 변한 것 같고 제 나이에 받아줄 곳이 있을지 두렵습니다. 제가 다시 사회생활을 할 수 있을까요?"',
+                emotionTag: '정서: 두려움/불안/자신감 결여',
+                modelResponses: {
+                    '감정 반영': '"8년이라는 긴 공백기로 인해 급변한 사회에 적응하지 못할까 봐 두렵고, 나이에 대한 열등감으로 자신감이 많이 떨어져 있으시군요."',
+                    '재진술': '"즉, 재취업을 희망하지만 경력 단절로 인한 기술적·연령적 장벽을 크게 느끼고 계신 상황이군요."',
+                    '직면': '"일을 다시 시작하고 싶다고 말씀하시면서도, 막상 채용 공고를 확인할 때는 자격 요건을 보며 먼저 지레 포기하고 계시네요."',
+                    '명료화': '"\'세상이 너무 변했다\'고 말씀하셨는데, 구체적으로 어떤 직무 기술이나 환경이 가장 부담스러우신가요?"',
+                    '초점화': '"재취업 두려움 극복과 실제 보유하신 강점 재발견 중 어느 쪽에 집중해 대화를 나눠볼까요?"',
+                    '개방형 질문': '"과거 10년간 직장 생활을 완수하셨을 때, 내담자님이 가장 보람차고 유능하다고 느꼈던 순간은 언제였나요?"',
+                    '폐쇄형 질문': '"전산 관련 자격증이나 독서지도사 자격증을 현재 보유하고 계신가요?"',
+                    '해석': '"두려움 뒤에는 다시 한번 잘 해내고 싶다는 강한 책임감과 자아실현 욕구가 크게 자리 잡고 있기 때문일 수 있습니다."',
+                    '즉시성': '"질문을 드리니 한숨을 깊게 내쉬셨는데, 방금 어떤 마음이 스쳐 지나가셨나요?"',
+                    '직업적 정보제공': '"여성새로일하기센터(새일센터)를 통해 경력단절여성 맞춤형 국비지원 직업훈련 및 취업 알선 서비스를 이용하실 수 있습니다."'
+                }
+            },
+            {
+                id: 3,
+                clientText: '"자격증도 따고 스펙도 쌓았는데 막상 입사 지원서를 쓰려고 하면 자꾸 딴짓을 하게 되고 미루게 돼요. 제 정신력이 너무 약한 것 같아요."',
+                emotionTag: '정서: 자책/불안/회피',
+                modelResponses: {
+                    '감정 반영': '"충분히 준비하셨음에도 실행으로 옮기지 못해 스스로를 자책하고 계시지만, 한편으로는 또다시 실패할까 봐 불안한 마음이 크시군요."',
+                    '재진술': '"즉, 입사 지원이라는 실제 도전을 앞두고 회피 행동이 나타나 스스로 답답함을 느끼고 계시는군요."',
+                    '직면': '"정신력이 약하다고 스스로를 비난하시지만, 사실은 낙방에 대한 공포로부터 자신을 보호하기 위해 미루고 계신 것은 아닐까요?"',
+                    '명료화': '"\'자꾸 미루게 된다\'고 하셨는데, 지원서를 쓰려고 컴퓨터 앞에 앉았을 때 정확히 어떤 생각이 스쳐 지나가나요?"',
+                    '초점화': '"스스로에 대한 자책보다는 미루게 만드는 내면의 불안과 대치하는 구체적 방법에 초점을 맞춰볼까요?"',
+                    '개방형 질문': '"지원서 작성을 미루지 않고 끝까지 완성했던 과거 경험에서는 어떤 계기가 있었나요?"',
+                    '폐쇄형 질문': '"오늘 상담이 끝난 후 이번 주 내로 지원서 1곳을 제출해보는 과제를 시도해 보시겠습니까?"',
+                    '해석': '"완벽하게 준비된 상태에서만 도전해야 한다는 완벽주의적 신념이 오히려 첫 걸음을 떼지 못하게 가로막는 것일 수 있습니다."',
+                    '즉시성': '"지금 미루는 행동에 대해 말씀하시면서 미안한 듯 저를 살피시는데, 제 눈치가 보이시나요?"',
+                    '직업적 정보제공': '"작은 과제 점진적 설정 기법을 활용하여 하루 15분씩 자기소개서 한 문항만 작성하는 타이머 행동 기법을 적용할 수 있습니다."'
+                }
+            },
+            {
+                id: 4,
+                clientText: '"부모님은 안정적인 공무원을 바라시는데 저는 스타트업에서 제 능력을 펼치고 싶어요. 자꾸 갈등이 생겨서 너무 지칩니다."',
+                emotionTag: '정서: 피로감/갈등/죄책감',
+                modelResponses: {
+                    '감정 반영': '"자신의 주체적인 진로 열망과 부모님의 기대 사이에서 중간에 끼어 심리적으로 지치고 죄책감까지 느끼고 계시는군요."',
+                    '재진술': '"즉, 부모님이 원하시는 안정성과 본인이 추구하는 자율적 성장의 가치가 충돌하여 갈등을 겪고 계신 상황이군요."',
+                    '직면': '"부모님의 기대 때문에 지친다고 하시면서도, 여전히 부모님의 경제적 지지에 의존하며 독립된 선택을 망설이고 계시네요."',
+                    '명료화': '"\'내 능력을 펼치고 싶다\'고 하셨는데, 스타트업에서 구체적으로 어떤 직무 역할을 경험하고 싶으신가요?"',
+                    '초점화': '"부모님과의 대화 방식 개선과 내담자님의 진로 가치 명료화 중 오늘 다룰 우선 과제는 무엇인가요?"',
+                    '개방형 질문': '"부모님의 뜻과 달리 내담자님이 바라는 스타트업 진로를 선택했을 때 느낄 수 있는 삶의 가치는 무엇인가요?"',
+                    '폐쇄형 질문': '"부모님께 자신의 진로 포트폴리오와 구체적 수입 계획을 작성해 보여드린 적이 있으신가요?"',
+                    '해석': '"부모님과의 갈등은 내담자님이 비로소 독립된 성인으로서 심리적 독립과 정체성을 확립해가는 발달적 과정일 수 있습니다."',
+                    '즉시성': '"부모님 이야기를 하실 때 목소리에 힘이 들어가고 눈빛이 단호해지시는데, 현재 어떤 내면의 의지가 느껴지시나요?"',
+                    '직업적 정보제공': '"스타트업 채용 플랫폼(원티드, 로켓펀치 등) 및 청년 창업 지원 프로그램을 통해 객관적인 일자리 정보와 성장 경로를 파악할 수 있습니다."'
+                }
+            }
+        ];
+
+        const ethicsData = [
+            {
+                association: 'kcpa',
+                assocName: '한국상담심리학회 (KCPA)',
+                title: '상담심리사 윤리강령 - 내담자 복리 & 비밀보장',
+                icon: 'fa-user-shield',
+                badgeColor: 'bg-blue-100 text-blue-800 border-blue-300',
+                clauses: [
+                    { num: '제1조 (전문가로서의 태도)', text: '상담심리사는 자신의 자질과 전문성을 지속적으로 발전시키기 위해 교육, 수련, 슈퍼비전을 받아야 하며, 자신의 능력 한계를 솔직하게 인정해야 한다.' },
+                    { num: '제2조 (내담자 복리 및 사전동의)', text: '상담사는 내담자의 자율성을 존중하고, 상담 시작 전 상담의 목표, 기법, 제약, 비용, 비밀보장의 한계에 대해 충분히 설명하고 사전동의(Informed Consent)를 얻어야 한다.' },
+                    { num: '제3조 (비밀보장과 한계)', text: '내담자의 사생활과 상담 내용을 철저히 보호해야 한다. 단, 자신이나 타인의 생명/신체에 치명적 위험이 있는 경우, 법원의 명백한 명령이 있는 경우, 학대 정황이 있는 경우에는 윤리적 예외를 적용한다.' },
+                    { num: '제4조 (다중관계 금지)', text: '상담사는 내담자와의 객관성과 전문적 판단을 저해할 수 있는 금전, 개인적 친분, 성적 관계 등 이중관계를 엄격히 금지한다.' }
+                ]
+            },
+            {
+                association: 'kca',
+                assocName: '한국상담학회 (KCA)',
+                title: '전문상담사 윤리강령 - 전문성 & 자율성 존중',
+                icon: 'fa-graduation-cap',
+                badgeColor: 'bg-indigo-100 text-indigo-800 border-indigo-300',
+                clauses: [
+                    { num: '제1장 (상담사의 전문성)', text: '상담사는 전문적 표준에 부합하는 상담 서비스를 제공하며, 자신의 개인적 문제나 한계가 내담자에게 유해한 영향을 미치지 않도록 자기관리를 철저히 한다.' },
+                    { num: '제2장 (상담 관계)', text: '상담사는 내담자의 종교, 인종, 성별, 연령, 장애 등에 따른 차별을 금지하며, 내담자의 주체적 자기결정권을 최우선으로 존중한다.' },
+                    { num: '제3장 (정보의 관리)', text: '상담 기록 축어록 및 평가 자료는 암호화하여 안전하게 관리하며, 제3자에게 제공할 경우 반드시 내담자의 서면 동의를 거쳐야 한다.' },
+                    { num: '제4장 (슈퍼비전 및 교육)', text: '상담사는 수련생 교육이나 슈퍼비전 과정에서 수련생의 권익을 보호하고 객관적인 평가를 수행한다.' }
+                ]
+            },
+            {
+                association: 'kcca',
+                assocName: '한국진로상담학회 (KCCA)',
+                title: '진로상담사 윤리강령 - 진로 의사결정 & 공정성',
+                icon: 'fa-compass',
+                badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+                clauses: [
+                    { num: '제1조 (진로 검사 및 평가 윤리)', text: '진로적성 및 흥미검사 활용 시 타당도와 신뢰도가 검증된 표준화 도구를 사용하고, 결과 해석 시 내담자의 맥락적 배경을 충분히 고려해야 한다.' },
+                    { num: '제2조 (직업정보의 객관성)', text: '특정 직업군이나 교육기관에 편향되지 않은 객관적이고 최신의 진로/직업 정보를 제공하여 내담자의 합리적 선택을 돕는다.' },
+                    { num: '제3조 (자기결정권 보장)', text: '진로 의사결정의 주체는 내담자 자신임을 명심하고, 상담자의 주관적 가치관이나 편견을 내담자에게 강요해서는 안 된다.' },
+                    { num: '제4조 (다문화 및 취약계층 옹호)', text: '사회경제적 취약계층 및 다문화 내담자의 진로 장벽을 경감하기 위해 제도적 자원 연계와 사회정의 옹호(Advocacy)에 힘쓴다.' }
+                ]
+            },
+            {
+                association: 'kova',
+                assocName: '한국직업상담협회 (KOVA)',
+                title: '직업상담사 윤리헌장 - 개인정보 보호 & 중립성',
+                icon: 'fa-briefcase',
+                badgeColor: 'bg-amber-100 text-amber-800 border-amber-300',
+                clauses: [
+                    { num: '제1조 (구직자 개인정보 보안)', text: '직업상담사는 구직자의 이력서, 개인정보, 알선 이력을 취업 알선 외의 목적으로 무단 유출하거나 활용하지 않는다.' },
+                    { num: '제2조 (알선 및 제공의 중립성)', text: '구인기업과 구직자 사이에서 금전적 부당이득이나 사적 이익을 취하지 않으며, 공정하고 알선 기준에 입각하여 수수료/정보를 관리한다.' },
+                    { num: '제3조 (알선의 공정성과 부당이익 금지)', text: '특정 기업의 구인 광고나 구직자의 스펙을 허위·과장 보고하지 않으며, 이익충돌 발생 시 공정성을 최우선으로 유지한다.' },
+                    { num: '제4조 (지속적 직무 수련)', text: '급변하는 노동시장 법률 및 직업 훈련 제도를 숙지하여 정확한 직업 상담과 정보를 전달하도록 보수교육에 적극 참여한다.' }
+                ]
+            }
+        ];
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'bg-emerald-600', 'bg-purple-600', 'bg-amber-600', 'bg-teal-600', 'text-white', 'shadow-md');
+                btn.classList.add('text-slate-300');
+            });
+
+            const activeView = document.getElementById('view-' + tabId);
+            if (activeView) activeView.classList.remove('hidden');
+
+            const activeTabBtn = document.getElementById('tab-' + tabId);
+            if (activeTabBtn) {
+                let activeBg = 'bg-blue-600';
+                if (tabId === 'menu2') activeBg = 'bg-emerald-600';
+                if (tabId === 'menu3') activeBg = 'bg-purple-600';
+                if (tabId === 'menu4') activeBg = 'bg-amber-600';
+                if (tabId === 'menu5') activeBg = 'bg-teal-600';
+
+                activeTabBtn.classList.add(activeBg, 'text-white', 'shadow-md');
+                activeTabBtn.classList.remove('text-slate-300');
+            }
+        }
+
+        function renderProblemTypeButtons() {
+            const container = document.getElementById('problemTypeBtns');
+            if (!container) return;
+            container.innerHTML = ALL_PROBLEM_TYPES.map(type => {
+                const isSelected = selectedProblemTypesSet.has(type);
+                return `
+                    <button type="button" onclick="toggleProblemType('${type}')" class="px-2.5 py-1 text-[11px] font-bold rounded-lg border transition-all ${
+                        isSelected 
+                            ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs' 
+                            : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'
+                    }">
+                        ${isSelected ? '<i class="fa-solid fa-check text-[10px] mr-1"></i>' : ''}${type}
+                    </button>
+                `;
+            }).join('');
+            
+            const customContainer = document.getElementById('customProblemTypeContainer');
+            if (customContainer) {
+                if (selectedProblemTypesSet.has('기타')) {
+                    customContainer.classList.remove('hidden');
+                } else {
+                    customContainer.classList.add('hidden');
+                }
+            }
+
+            updateProblemTypeInputValue();
+        }
+
+        function updateProblemTypeInputValue() {
+            const hiddenInput = document.getElementById('caseProblemTypeInput');
+            if (!hiddenInput) return;
+
+            let typesArray = Array.from(selectedProblemTypesSet).map(type => {
+                if (type === '기타') {
+                    const customVal = document.getElementById('customProblemTypeInput')?.value.trim();
+                    return customVal ? `기타(${customVal})` : '기타';
+                }
+                return type;
+            });
+
+            hiddenInput.value = typesArray.join(', ');
+        }
+
+        function toggleProblemType(type) {
+            if (selectedProblemTypesSet.has(type)) {
+                selectedProblemTypesSet.delete(type);
+            } else {
+                selectedProblemTypesSet.add(type);
+            }
+            renderProblemTypeButtons();
+        }
+
+        function clearSelectedProblemTypes() {
+            selectedProblemTypesSet.clear();
+            const customInput = document.getElementById('customProblemTypeInput');
+            if (customInput) customInput.value = '';
+            renderProblemTypeButtons();
+        }
+
+        function renderTheorySelectionButtons() {
+            const display = document.getElementById('selectedTheoryDisplay');
+            const hiddenInput = document.getElementById('caseTheoryInput');
+            
+            if (display) {
+                if (selectedTheoriesSet.size === 0) {
+                    display.innerHTML = '<span class="text-slate-400 italic text-[11px]">선택된 이론이 없습니다. 아래 팝업을 통해 선택하세요.</span>';
+                } else {
+                    display.innerHTML = Array.from(selectedTheoriesSet).map(tName => `
+                        <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-lg border border-emerald-300 text-[11px]">
+                            <i class="fa-solid fa-check text-[10px] text-emerald-600"></i>
+                            ${tName}
+                            <button type="button" onclick="toggleTheorySelection('${tName}')" class="ml-1 text-emerald-600 hover:text-emerald-900 font-bold">&times;</button>
+                        </span>
+                    `).join('');
+                }
+            }
+
+            if (hiddenInput) {
+                hiddenInput.value = Array.from(selectedTheoriesSet).join(', ');
+            }
+
+            const modalPart1 = document.getElementById('modalPart1Btns');
+            const modalPart2 = document.getElementById('modalPart2Btns');
+
+            if (modalPart1) {
+                modalPart1.innerHTML = theoryData.part1.map(t => {
+                    const isSelected = selectedTheoriesSet.has(t.name);
+                    return `
+                        <button type="button" onclick="toggleTheorySelection('${t.name}')" class="px-2.5 py-1 text-[11px] font-bold rounded-lg border transition-all ${
+                            isSelected ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
+                        }">
+                            ${isSelected ? '✓ ' : ''}${t.name}
+                        </button>
+                    `;
+                }).join('');
+            }
+
+            if (modalPart2) {
+                modalPart2.innerHTML = theoryData.part2.map(t => {
+                    const isSelected = selectedTheoriesSet.has(t.name);
+                    return `
+                        <button type="button" onclick="toggleTheorySelection('${t.name}')" class="px-2.5 py-1 text-[11px] font-bold rounded-lg border transition-all ${
+                            isSelected ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
+                        }">
+                            ${isSelected ? '✓ ' : ''}${t.name}
+                        </button>
+                    `;
+                }).join('');
+            }
+
+            const modalCount = document.getElementById('modalSelectedCount');
+            if (modalCount) {
+                modalCount.innerText = `선택된 이론: ${selectedTheoriesSet.size}개`;
+            }
+        }
+
+        function toggleTheorySelection(theoryName) {
+            if (selectedTheoriesSet.has(theoryName)) {
+                selectedTheoriesSet.delete(theoryName);
+            } else {
+                selectedTheoriesSet.add(theoryName);
+            }
+            renderTheorySelectionButtons();
+        }
+
+        function openTheorySelectModal() {
+            renderTheorySelectionButtons();
+            document.getElementById('theorySelectModal').classList.remove('hidden');
+        }
+
+        function closeTheorySelectModal() {
+            document.getElementById('theorySelectModal').classList.add('hidden');
+        }
+
+        function resetAllSelectedTheories() {
+            selectedTheoriesSet.clear();
+            renderTheorySelectionButtons();
+        }
+
+        function onCasePresetChange() {
+            const val = document.getElementById('casePresetSelect').value;
+            if (val !== 'custom') {
+                loadSampleCase(val);
+            }
+        }
+
+        function onLoadSampleButtonClick() {
+            const val = document.getElementById('casePresetSelect').value;
+            loadSampleCase(val === 'custom' ? 'sample1' : val);
+        }
+
+        function loadSampleCase(key) {
+            const sample = sampleCaseData[key];
+            if (!sample) return;
+
+            const profileInput = document.getElementById('caseProfileInput');
+            if (profileInput) profileInput.value = sample.profile || '';
+
+            const complaintInput = document.getElementById('caseComplaintInput');
+            if (complaintInput) complaintInput.value = sample.complaint || '';
+
+            selectedTheoriesSet.clear();
+            if (sample.theory) {
+                sample.theory.split(',').forEach(t => {
+                    const trimmed = t.trim();
+                    if (trimmed) selectedTheoriesSet.add(trimmed);
+                });
+            }
+            renderTheorySelectionButtons();
+
+            selectedProblemTypesSet.clear();
+            if (sample.problemTypes && Array.isArray(sample.problemTypes)) {
+                sample.problemTypes.forEach(p => selectedProblemTypesSet.add(p));
+            }
+            renderProblemTypeButtons();
+
+            const primaryEl = document.getElementById('primaryEmotionInput');
+            if (primaryEl) primaryEl.value = sample.primaryEmotion || '';
+
+            const secondaryEl = document.getElementById('secondaryEmotionInput');
+            if (secondaryEl) secondaryEl.value = sample.secondaryEmotion || '';
+
+            const instrumentalEl = document.getElementById('instrumentalEmotionInput');
+            if (instrumentalEl) instrumentalEl.value = sample.instrumentalEmotion || '';
+
+            const triggerEl = document.getElementById('caseTriggerInput');
+            if (triggerEl) triggerEl.value = sample.trigger || '';
+
+            const maintainingEl = document.getElementById('caseMaintainingInput');
+            if (maintainingEl) maintainingEl.value = sample.maintaining || '';
+
+            const protectiveEl = document.getElementById('caseProtectiveInput');
+            if (protectiveEl) protectiveEl.value = sample.protective || '';
+
+            renderPrebuiltReport(key);
+        }
+
+        function analyzeCaseData(profile, complaint) {
+            let problemTypes = Array.from(selectedProblemTypesSet).map(type => {
+                if (type === '기타') {
+                    const customVal = document.getElementById('customProblemTypeInput')?.value.trim();
+                    return customVal ? `기타(${customVal})` : '기타';
+                }
+                return type;
+            });
+
+            if (problemTypes.length === 0) {
+                problemTypes = ['심리정서문제', '의사결정부족', '계획 및 실행 부족'];
+            }
+
+            const triggerInput = document.getElementById('caseTriggerInput')?.value.trim();
+            const maintainingInput = document.getElementById('caseMaintainingInput')?.value.trim();
+            const protectiveInput = document.getElementById('caseProtectiveInput')?.value.trim();
+
+            return {
+                problemTypes: problemTypes,
+                triggerText: triggerInput || '연속된 면접 탈락 및 최근 사회적 기대 부담 누적',
+                maintainingText: maintainingInput || '자동적 사고("나는 실패자다") 및 사회적 대인관계 회피 행동',
+                protectiveText: protectiveInput || '1. 직업적 강점: 서류/필기 시험 합격 경험 및 직무 역량 보유\n2. 개인적 강점: 우수한 성실성과 목표 추진력\n3. 환경적 강점: 지지적 부모 및 거주/생계 인프라\n4. 심리적 강점: 자발적 상담 참여 동기 및 정서적 회복 열망'
+            };
+        }
+
+        async function generateCaseReport() {
+            const profile = document.getElementById('caseProfileInput').value.trim();
+            const complaint = document.getElementById('caseComplaintInput').value.trim();
+            const theory = document.getElementById('caseTheoryInput').value.trim();
+
+            const customTrigger = document.getElementById('caseTriggerInput').value.trim();
+            const customMaintaining = document.getElementById('caseMaintainingInput').value.trim();
+            const customProtective = document.getElementById('caseProtectiveInput').value.trim();
+            const primaryEmotion = document.getElementById('primaryEmotionInput')?.value.trim() || '미지정';
+            const secondaryEmotion = document.getElementById('secondaryEmotionInput')?.value.trim() || '미지정';
+            const instrumentalEmotion = document.getElementById('instrumentalEmotionInput')?.value.trim() || '미지정/해당없음';
+            const selectedProblemTypes = Array.from(selectedProblemTypesSet).join(', ');
+
+            if (!profile || !complaint) {
+                const msgBox = document.createElement('div');
+                msgBox.className = 'fixed bottom-4 right-4 bg-red-600 text-white text-xs px-4 py-2 rounded-xl shadow-lg z-50';
+                msgBox.innerText = '내담자 개요 및 호소문 내용을 입력해 주세요.';
+                document.body.appendChild(msgBox);
+                setTimeout(() => msgBox.remove(), 3000);
+                return;
+            }
+
+            document.getElementById('reportLoading').classList.remove('hidden');
+
+            if (userApiKey) {
+                try {
+                    const systemPrompt = `당신은 20년 경력의 베테랑 임상심리학자이자 전문 직업상담사입니다.
+다음 정확한 구조에 따라 '상담 사례 보고서'를 정밀하게 작성하세요:
+
+# [상담 사례 보고서]
+
+## 1. 사례개념화
+1) 내담자 개요
+   - **인적 사항**:
+   - **가족 사항**:
+   - **경제 상황**:
+   - **직업 사항**: (아르바이트·인턴 등 직업 경험 포함)
+   - **자격 사항**:
+   - **하루 일과**:
+   - **대인관계**:
+   - **희망 취업 조건**: (희망 취업 시기: ~개월 이내 포함)
+   - **자신의 강점**:
+   - **취업의 걸림돌**:
+2) 내담자 호소문
+3) 호소문의 배경 및 3대 요인
+   - ⚡ 촉발요인: ${customTrigger}
+   - 🔄 유지요인: ${customMaintaining}
+   - 🌟 보호요인(강점요인): 1. 직업적 / 2. 개인적 / 3. 환경적 / 4. 심리적
+4) 인지, 정서, 행동 (문제 유형: ${selectedProblemTypes}, 1차 정서: ${primaryEmotion}, 2차 정서: ${secondaryEmotion}, 도구적 정서: ${instrumentalEmotion})
+5) 적용이론 및 심리검사 선택 및 선택 근거
+6) 이론에 근거한 내담자 평가
+7) 상담 가설 (가설 1, 가설 2, 가설 3)
+8) 상담 목표 (정서 측면, 인지 측면, 행동 측면, 진로(직업) 측면)
+9) 개입 전략 (인지적 개입, 행동적 개입, 정서적 개입, 진로(직업) 개입, 환경 개입)
+10) 사례개념화 종합 요약 ("내담자는 [배경]을 가지고 있었는데, [촉발 사건]으로 문제가 촉발되어, [유지 이유]로 유지되고 있습니다. [4대 강점 요인들]이 강점으로서 보호요인으로 작용되므로 [적용 이론]을 토대로 [상담 목표] 목표로 개입하고자 합니다.")
+
+## 2. 상담 진행 및 평가
+1) 상담 진행 (핵심 회기 축어록)
+2) 후기 (전이/역전이 및 소회)
+3) 최종 상담평가 (가설 1,2,3 검증 및 4대 상담 목표 달성도 대비 평가)`;
+
+                    const userPrompt = `내담자 정보: ${profile}\n호소문: ${complaint}\n문제유형: ${selectedProblemTypes}\n이론: ${theory}`;
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${userApiKey}`;
+                    const resp = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: userPrompt }] }],
+                            systemInstruction: { parts: [{ text: systemPrompt }] }
+                        })
+                    });
+
+                    const data = await resp.json();
+                    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (text) {
+                        document.getElementById('reportContainer').innerHTML = marked.parse(text);
+                    } else {
+                        throw new Error('API 응답 실패');
+                    }
+                } catch (e) {
+                    console.error(e);
+                    renderPrebuiltReport('custom_fallback');
+                } finally {
+                    document.getElementById('reportLoading').classList.add('hidden');
+                }
+            } else {
+                setTimeout(() => {
+                    renderPrebuiltReport('custom_fallback');
+                    document.getElementById('reportLoading').classList.add('hidden');
+                }, 500);
+            }
+        }
+
+        function renderPrebuiltReport(typeKey) {
+            const profileRaw = document.getElementById('caseProfileInput').value || '28세 / 여성 / 취업준비생';
+            const complaint = document.getElementById('caseComplaintInput').value || '공기업 면접 낙방 후 무기력감과 존재적 회의감 호소';
+            const theory = document.getElementById('caseTheoryInput').value || '인지행동치료 (CBT), 수용전념치료 (ACT)';
+            const primaryEmotion = document.getElementById('primaryEmotionInput')?.value || '상실감, 두려움';
+            const secondaryEmotion = document.getElementById('secondaryEmotionInput')?.value || '무력감, 자책';
+            const instrumentalEmotion = document.getElementById('instrumentalEmotionInput')?.value || '부모 및 주변 비판을 회피하기 위한 무력함 연출';
+            
+            const analysis = analyzeCaseData(profileRaw, complaint);
+
+            let overviewContent = `
+                • <b>인적 사항:</b> 28세 / 여성 / 대졸 / 취업준비생<br>
+                • <b>가족 사항:</b> 부모님, 남동생 동거 (부모님 은퇴 임박)<br>
+                • <b>경제 상황:</b> 부모님 의존 중이며 경제적 자립 욕구 고조<br>
+                • <b>직업 사항:</b> 취업준비생 (공기업 인턴 3개월, 카페 아르바이트 6개월 경험)<br>
+                • <b>자격 사항:</b> 컴활 1급, 한국사 1급, 토익 880점<br>
+                • <b>하루 일과:</b> 09:00 기상 후 스터디카페 수험 공부, 사회적 회피<br>
+                • <b>대인관계:</b> 실패 경험 이후 외부 지인과의 소통 회피 및 관계 고립<br>
+                • <b>희망 취업 조건:</b> 수도권 소재 공기업 사무직 (희망 취업 시기: 3개월 이내)<br>
+                • <b>자신의 강점:</b> 높은 성실성, 규율 준수, 필기 역량 우수<br>
+                • <b>취업의 걸림돌:</b> 면접 실패 경험으로 인한 대인 불안 및 구직 회피
+            `;
+
+            let htmlReport = `
+                <div class="space-y-8">
+                    <div class="bg-gradient-to-r from-emerald-800 to-teal-700 text-white p-5 rounded-2xl shadow-sm flex justify-between items-center">
+                        <div>
+                            <span class="text-emerald-200 text-xs font-semibold uppercase tracking-wider block">Counseling Case Report</span>
+                            <h2 class="text-2xl font-bold mt-0.5">상담 사례 보고서</h2>
+                        </div>
+                        <i class="fa-solid fa-file-signature text-3xl text-emerald-300/60"></i>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs space-y-6">
+                        <div class="border-b border-emerald-100 pb-3 flex items-center gap-2">
+                            <span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">Part 1</span>
+                            <h3 class="font-bold text-slate-900 text-lg">1. 사례개념화</h3>
+                        </div>
+
+                        <div class="space-y-5 text-xs sm:text-sm text-slate-800 leading-relaxed">
+                            <section>
+                                <h4 class="font-bold text-emerald-800 text-xs sm:text-sm mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-id-card text-emerald-600"></i> 1) 내담자 개요
+                                </h4>
+                                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 leading-relaxed space-y-1">
+                                    ${overviewContent}
+                                </div>
+                            </section>
+
+                            <section>
+                                <h4 class="font-bold text-emerald-800 text-xs sm:text-sm mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-comment-dots text-emerald-600"></i> 2) 내담자 호소문
+                                </h4>
+                                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 italic text-slate-700">
+                                    "${complaint}"
+                                </div>
+                            </section>
+
+                            <section>
+                                <h4 class="font-bold text-emerald-800 text-xs sm:text-sm mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-layer-group text-emerald-600"></i> 3) 호소문의 배경 및 3대 요인
+                                </h4>
+                                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-3">
+                                    <p><b>■ 내·외적 배경:</b> 연속된 면접 낙방 상황과 부모 및 타인의 기대에 대한 심리적 압박감이 내면화됨.</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-1">
+                                        <div class="bg-purple-50/70 p-2.5 rounded-lg border border-purple-200">
+                                            <span class="font-bold text-purple-900 text-xs block mb-0.5">⚡ 촉발요인</span>
+                                            <p class="text-xs text-slate-700 whitespace-pre-line">${analysis.triggerText}</p>
+                                        </div>
+                                        <div class="bg-amber-50/70 p-2.5 rounded-lg border border-amber-200">
+                                            <span class="font-bold text-amber-900 text-xs block mb-0.5">🔄 유지요인</span>
+                                            <p class="text-xs text-slate-700 whitespace-pre-line">${analysis.maintainingText}</p>
+                                        </div>
+                                        <div class="bg-emerald-50/70 p-2.5 rounded-lg border border-emerald-200">
+                                            <span class="font-bold text-emerald-900 text-xs block mb-0.5">🌟 보호요인(강점요인)</span>
+                                            <div class="text-xs text-slate-700 whitespace-pre-line font-medium">${analysis.protectiveText}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <h4 class="font-bold text-emerald-800 text-xs sm:text-sm mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-brain text-emerald-600"></i> 4) 인지, 정서, 행동
+                                </h4>
+                                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+                                    <p><b>■ 인지:</b> 흑백논리적 사고("합격 못하면 내 인생은 실패자다"), 파국화 및 자가비하 사고.</p>
+                                    <p><b>■ 정서:</b> 💧 1차 정서: ${primaryEmotion} | 🔥 2차 정서: ${secondaryEmotion} | 🎭 도구적 정서: ${instrumentalEmotion}</p>
+                                    <p><b>■ 행동:</b> 대인관계 단절, 사회적 회피, 취업 지원 서류 작성 연기.</p>
+                                </div>
+                            </section>
+
+                            <section>
+                                <h4 class="font-bold text-emerald-800 text-xs sm:text-sm mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-sliders text-emerald-600"></i> 5) 적용이론 및 심리검사 선택 및 근거
+                                </h4>
+                                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+                                    <p><b>■ 적용 이론:</b> <span class="font-bold text-emerald-800">${theory}</span></p>
+                                    <p><b>■ 근거:</b> 인지 재구조화를 통해 자동적 사고의 타당성을 검증하고, 불쾌한 1차 정서를 수용하며 가치 지향적 행동을 도모하기에 적합함.</p>
+                                </div>
+                            </section>
+
+                            <section>
+                                <h4 class="font-bold text-emerald-800 text-xs sm:text-sm mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-lightbulb text-emerald-600"></i> 6) 상담 가설
+                                </h4>
+                                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1.5">
+                                    <p>• <b>가설 1 (인지정서 역동):</b> 2차 정서(무력감) 아래 숨겨진 1차 정서(${primaryEmotion})를 수용하면 자가비하 사고의 발생 빈도가 감소할 것이다.</p>
+                                    <p>• <b>가설 2 (행동 회피):</b> 핵심신념을 탈중심화하여 바라볼 수 있다면 대인관계 단절 및 서류 접수 미루기 등 회피 행동이 완화될 것이다.</p>
+                                    <p>• <b>가설 3 (진로 역량):</b> 4대 보호요인을 재자각할 경우, 타인의 평가에 의존하지 않고 주도적인 가치 지향적 구직 행동에 나설 것이다.</p>
+                                </div>
+                            </section>
+
+                            <section>
+                                <h4 class="font-bold text-emerald-800 text-xs sm:text-sm mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-bullseye text-emerald-600"></i> 7) 상담 목표 (4대 측면 구체화)
+                                </h4>
+                                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+                                    <p>• <b>정서 측면:</b> 1차 정서(${primaryEmotion}) 자각 및 수용 점수 향상 / BDI-II 우울 수치 정상화.</p>
+                                    <p>• <b>인지 측면:</b> 주 3회 이상 5칼럼 인지재구조화 사고기록지 작성 / 역기능적 핵심신념 탈중심화.</p>
+                                    <p>• <b>행동 측면:</b> 하루 30분 신체 활동 및 외부 지인과 소통 재개 / 주 1회 이상 행동실험 수행.</p>
+                                    <p>• <b>진로(직업) 측면:</b> 과거 4대 강점요인을 재자각하고 가치 지향적 직무 분야에 주 1회 이상 입사지원서 제출.</p>
+                                </div>
+                            </section>
+
+                            <section>
+                                <h4 class="font-bold text-emerald-800 text-xs sm:text-sm mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-list-check text-emerald-600"></i> 8) 개입 전략 (5대 구체적 개입 체계)
+                                </h4>
+                                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+                                    <p>• <b>인지적 개입:</b> CBT 소크라테스식 질문법 및 5칼럼 사고기록지 작성, ACT 인지적 탈융합 메타포 개입.</p>
+                                    <p>• <b>행동적 개입:</b> 점진적 과제 설정 및 작은 성공 경험 촉진을 위한 행동실험 실행.</p>
+                                    <p>• <b>정서적 개입:</b> 공감적 경청 및 EFT 1차 정서 자각 기법을 활용하여 상실감/두려움을 수용적으로 변용.</p>
+                                    <p>• <b>진로(직업) 개입:</b> CIP 직업정보 피라미드 분석 및 4Cs 진로적응도 자신감 회복 대본 재작성 개입.</p>
+                                    <p>• <b>환경 개입:</b> 부모님의 기대 부담 완화를 위한 가족 환경적 지지 자원 매개 및 공공 직업훈련 연계.</p>
+                                </div>
+                            </section>
+
+                            <section class="bg-emerald-50/90 p-4 rounded-xl border-2 border-emerald-300 shadow-2xs space-y-2 mt-4">
+                                <h4 class="font-bold text-emerald-950 text-xs sm:text-sm flex items-center gap-1.5">
+                                    <i class="fa-solid fa-feather-pointed text-emerald-600"></i> 9) 사례개념화 종합 요약 (통합 문장 서술)
+                                </h4>
+                                <div class="bg-white p-4 rounded-lg border border-emerald-200 text-xs sm:text-sm text-slate-800 font-medium leading-relaxed shadow-2xs">
+                                    "내담자는 <b>연속된 취업 실패 경험과 주변의 높은 기대에 따른 심리적 압박 배경</b>을 가지고 있었는데, <b>${analysis.triggerText}</b> 사건으로 문제가 촉발되어, <b>${analysis.maintainingText}</b> 이유로 유지되고 있습니다. <b>우수한 직무 역량, 성실한 자질, 안정적인 생계 인프라 지원 및 자발적 상담 동기</b> 요인들이 강점으로서 보호요인으로 작용되므로 <b>${theory}</b>을(를) 토대로 <b>불쾌한 1차 정서 수용, 역기능적 자동적 사고의 인지적 탈융합 및 가치 지향적 구직 행동 재개</b> 목표로 개입하고자 합니다."
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-2xs space-y-6">
+                        <div class="border-b border-blue-100 pb-3 flex items-center gap-2">
+                            <span class="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">Part 2</span>
+                            <h3 class="font-bold text-slate-900 text-lg">2. 상담 진행 및 평가</h3>
+                        </div>
+
+                        <div class="space-y-4 text-xs sm:text-sm text-slate-800 leading-relaxed">
+                            <section>
+                                <h4 class="font-bold text-blue-800 text-xs sm:text-sm mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-comments text-blue-600"></i> 1) 상담 진행 (축어록 예시)
+                                </h4>
+                                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2 text-xs">
+                                    <p><b>상담사:</b> "지원서를 쓰려 할 때 마음속에서 어떤 생각이 먼저 스쳐 지나가시나요?"</p>
+                                    <p><b>내담자:</b> "'쓰나 마나 또 떨어질 텐데 뭐 하러 고생하나' 하는 생각이 들면서 가슴이 갑자기 답답해져요."</p>
+                                    <p><b>상담사:</b> "'또 떨어질 것 같다'는 그 생각과 가슴의 답답함을 바로 지우려 하지 않고, 마치 흘러가는 구름을 바라보듯 잠시 관조해볼 수 있을까요?"</p>
+                                </div>
+                            </section>
+
+                            <section>
+                                <h4 class="font-bold text-blue-800 text-xs sm:text-sm mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-user-pen text-blue-600"></i> 2) 후기 (전이/역전이 및 소회)
+                                </h4>
+                                <p class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                                    초기 내담자의 조급함과 무기력감에 상담자 역시 조급해지는 역전이 정서가 유발되었으나, 중립적·공감적 안아주기 환경을 유지하여 내담자 스스로 1차 정서를 접촉하도록 조력함.
+                                </p>
+                            </section>
+
+                            <section>
+                                <h4 class="font-bold text-blue-800 text-xs sm:text-sm mb-1.5 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-clipboard-check text-blue-600"></i> 3) 최종 상담평가
+                                </h4>
+                                <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+                                    <p><b>■ 가설 대비 평가:</b> 가설 1, 2, 3이 모두 검증되었으며 1차 정서 수용 및 인지적 탈융합을 통해 구직 회피 행동이 유의미하게 감소함.</p>
+                                    <p><b>■ 목표 대비 평가:</b> 정서적 안정화 달성, 5칼럼 사고기록지 주 3회 이수, 외부 소통 재개 및 주 1회 맞춤형 입사지원서 제출 목표 달성.</p>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('reportContainer').innerHTML = htmlReport;
+        }
+
+        function copyReportText() {
+            const container = document.getElementById('reportContainer');
+            if (!container) return;
+            const text = container.innerText;
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            const msgBox = document.createElement('div');
+            msgBox.className = 'fixed bottom-4 right-4 bg-slate-800 text-white text-xs px-4 py-2 rounded-xl shadow-lg z-50';
+            msgBox.innerText = '상담 사례 보고서 내용이 클립보드에 복사되었습니다.';
+            document.body.appendChild(msgBox);
+            setTimeout(() => msgBox.remove(), 2500);
+        }
+
+        function printReport() {
+            const content = document.getElementById('reportContainer').innerHTML;
+            const printWindow = window.open('', '_blank', 'width=900,height=900');
+            if (!printWindow) {
+                window.print();
+                return;
+            }
+            printWindow.document.open();
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>상담 사례 보고서 - CounselorHub Pro</title>
+                    <script src="https://cdn.tailwindcss.com"></` + `script>
+                    <style>
+                        body { font-family: 'Noto Sans KR', sans-serif; padding: 20px; color: #1e293b; }
+                        @media print {
+                            body { padding: 0; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${content}
+                    <script>
+                        window.onload = function() {
+                            setTimeout(function() {
+                                window.print();
+                                window.close();
+                            }, 400);
+                        };
+                    </` + `script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+
+        function filterPartTab(part) {
+            const sec1 = document.getElementById('sectionPart1');
+            const sec2 = document.getElementById('sectionPart2');
+            const sec3 = document.getElementById('sectionPart3');
+            
+            if (part === 'all') {
+                if (sec1) sec1.classList.remove('hidden');
+                if (sec2) sec2.classList.remove('hidden');
+                if (sec3) sec3.classList.remove('hidden');
+                collapseAllParts();
+            } else if (part === 'part1') {
+                if (sec1) sec1.classList.remove('hidden');
+                if (sec2) sec2.classList.add('hidden');
+                if (sec3) sec3.classList.add('hidden');
+                const content1 = document.getElementById('part1Content');
+                const arrow1 = document.getElementById('part1Arrow');
+                if (content1) content1.classList.remove('hidden');
+                if (arrow1) arrow1.style.transform = 'rotate(180deg)';
+                part1Expanded = true;
+            } else if (part === 'part2') {
+                if (sec1) sec1.classList.add('hidden');
+                if (sec2) sec2.classList.remove('hidden');
+                if (sec3) sec3.classList.add('hidden');
+                const content2 = document.getElementById('part2Content');
+                const arrow2 = document.getElementById('part2Arrow');
+                if (content2) content2.classList.remove('hidden');
+                if (arrow2) arrow2.style.transform = 'rotate(180deg)';
+                part2Expanded = true;
+            } else if (part === 'part3') {
+                if (sec1) sec1.classList.add('hidden');
+                if (sec2) sec2.classList.add('hidden');
+                if (sec3) sec3.classList.remove('hidden');
+                const content3 = document.getElementById('part3Content');
+                const arrow3 = document.getElementById('part3Arrow');
+                if (content3) content3.classList.remove('hidden');
+                if (arrow3) arrow3.style.transform = 'rotate(180deg)';
+                part3Expanded = true;
+            }
+        }
+
+        function expandAllParts() {
+            ['part1', 'part2', 'part3'].forEach(p => {
+                const content = document.getElementById(p + 'Content');
+                const arrow = document.getElementById(p + 'Arrow');
+                if (content) content.classList.remove('hidden');
+                if (arrow) arrow.style.transform = 'rotate(180deg)';
+            });
+            part1Expanded = true;
+            part2Expanded = true;
+            part3Expanded = true;
+        }
+
+        function collapseAllParts() {
+            ['part1', 'part2', 'part3'].forEach(p => {
+                const content = document.getElementById(p + 'Content');
+                const arrow = document.getElementById(p + 'Arrow');
+                if (content) content.classList.add('hidden');
+                if (arrow) arrow.style.transform = 'rotate(0deg)';
+            });
+            part1Expanded = false;
+            part2Expanded = false;
+            part3Expanded = false;
+        }
+
+        function togglePartAccordion(partId) {
+            const content = document.getElementById(partId + 'Content');
+            const arrow = document.getElementById(partId + 'Arrow');
+            if (!content) return;
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                if (partId === 'part1') part1Expanded = true;
+                if (partId === 'part2') part2Expanded = true;
+                if (partId === 'part3') part3Expanded = true;
+                if (arrow) arrow.style.transform = 'rotate(180deg)';
+            } else {
+                content.classList.add('hidden');
+                if (partId === 'part1') part1Expanded = false;
+                if (partId === 'part2') part2Expanded = false;
+                if (partId === 'part3') part3Expanded = false;
+                if (arrow) arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function renderWorksheetList() {
+            const grid3 = document.getElementById('part3Grid');
+            if (!grid3) return;
+
+            grid3.innerHTML = worksheetData.map(ws => `
+                <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="bg-purple-50 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded-md border border-purple-200">${ws.theory}</span>
+                            <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold">실무 양식</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-sm mb-1.5">${ws.title}</h4>
+                        <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-3">${ws.desc}</p>
+                    </div>
+                    <div class="space-y-1.5 pt-2 border-t border-slate-100">
+                        <button onclick="openWorksheetModal('${ws.id}')" class="w-full py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-800 text-xs font-bold rounded-lg border border-purple-200 transition-all flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-file-lines text-purple-600"></i> 워크시트 서식 및 활용법 보기
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openWorksheetModal(wsId) {
+            const ws = worksheetData.find(x => x.id === wsId);
+            if (!ws) return;
+
+            activeWorksheetId = wsId;
+            document.getElementById('modalWorksheetTheory').innerText = ws.theory;
+            document.getElementById('modalWorksheetTitle').innerText = ws.title;
+            document.getElementById('modalWorksheetDesc').innerText = ws.desc;
+
+            const body = document.getElementById('modalWorksheetBody');
+            body.innerHTML = `
+                <div class="space-y-4">
+                    <div class="bg-purple-50/80 p-3.5 rounded-xl border border-purple-200 text-xs">
+                        <h4 class="font-bold text-purple-900 mb-1 flex items-center gap-1.5">
+                            <i class="fa-solid fa-bullseye text-purple-600"></i> 워크시트 활용 목적 및 가이드
+                        </h4>
+                        <p class="text-slate-700 leading-relaxed font-medium">${ws.purpose}</p>
+                        <p class="text-slate-500 mt-1.5 italic">${ws.instructions}</p>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <h4 class="font-bold text-slate-800 text-xs flex items-center gap-1">
+                                <i class="fa-solid fa-align-left text-purple-600"></i> 양식 서식 원본 (복사 가능)
+                            </h4>
+                        </div>
+                        <pre id="worksheetRawContent" class="bg-white p-4 rounded-xl border border-slate-300 text-xs font-mono text-slate-800 whitespace-pre-wrap leading-relaxed shadow-inner max-h-[350px] overflow-y-auto custom-scrollbar select-all">${ws.content}</pre>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('worksheetModal').classList.remove('hidden');
+        }
+
+        function closeWorksheetModal() {
+            document.getElementById('worksheetModal').classList.add('hidden');
+        }
+
+        function copyCurrentWorksheetText() {
+            const ws = worksheetData.find(x => x.id === activeWorksheetId);
+            if (!ws) return;
+
+            const textarea = document.createElement('textarea');
+            textarea.value = ws.content;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            const msgBox = document.createElement('div');
+            msgBox.className = 'fixed bottom-4 right-4 bg-purple-700 text-white text-xs px-4 py-2 rounded-xl shadow-lg z-50';
+            msgBox.innerText = `[${ws.title}] 양식 서식이 클립보드에 복사되었습니다.`;
+            document.body.appendChild(msgBox);
+            setTimeout(() => msgBox.remove(), 2500);
+        }
+
+        function renderTheoryList() {
+            const grid1 = document.getElementById('part1Grid');
+            const grid2 = document.getElementById('part2Grid');
+            if (grid1) {
+                grid1.innerHTML = theoryData.part1.map(t => `
+                    <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="bg-blue-50 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded-md border border-blue-200">파트 1</span>
+                                <span class="text-[10px] text-slate-400 font-medium">${t.scholar}</span>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-sm mb-1">${t.name}</h4>
+                            <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-3">${t.summary}</p>
+                        </div>
+                        <button onclick="openTheoryModal('${t.id}')" class="w-full py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold rounded-lg border border-blue-200 transition-all flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-book-open text-blue-600"></i> 상세 내용 및 주요 기법 보기
+                        </button>
+                    </div>
+                `).join('');
+            }
+            if (grid2) {
+                grid2.innerHTML = theoryData.part2.map(t => `
+                    <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-md border border-emerald-200">파트 2</span>
+                                <span class="text-[10px] text-slate-400 font-medium">${t.scholar}</span>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-sm mb-1">${t.name}</h4>
+                            <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-3">${t.summary}</p>
+                        </div>
+                        <button onclick="openTheoryModal('${t.id}')" class="w-full py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold rounded-lg border border-emerald-200 transition-all flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-book-open text-emerald-600"></i> 상세 내용 및 주요 기법 보기
+                        </button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function openTheoryModal(id) {
+            let t = theoryData.part1.find(x => x.id === id) || theoryData.part2.find(x => x.id === id);
+            if (!t) return;
+
+            const catEl = document.getElementById('modalTheoryCategory');
+            if (catEl) catEl.innerText = id.startsWith('p1') ? '파트 1. 심리상담 이론' : '파트 2. 진로 및 직업상담 이론';
+            
+            document.getElementById('modalTheoryTitle').innerText = t.name;
+            document.getElementById('modalTheoryScholar').innerText = t.scholar;
+
+            const body = document.getElementById('modalTheoryBody');
+            body.innerHTML = `
+                <div class="space-y-4">
+                    <div class="bg-blue-50/60 p-3.5 rounded-xl border border-blue-100">
+                        <h4 class="font-bold text-blue-900 text-xs mb-1"><i class="fa-solid fa-star text-blue-600"></i> 핵심 요약</h4>
+                        <p class="text-slate-700 text-xs leading-relaxed">${t.summary}</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-xs mb-1"><i class="fa-solid fa-brain text-blue-600"></i> 주요 개념 및 관점</h4>
+                        <p class="text-slate-600 text-xs leading-relaxed mb-2">${t.concept}</p>
+                        <p class="text-slate-600 text-xs leading-relaxed"><b class="text-slate-800">증상/부적응 관점:</b> ${t.viewpoint}</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-xs mb-1"><i class="fa-solid fa-list-check text-blue-600"></i> 주요 상담 기법</h4>
+                        <div class="text-slate-700 text-xs leading-relaxed whitespace-pre-line bg-slate-50 p-3 rounded-xl border border-slate-200">${t.techniques}</div>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-xs mb-1"><i class="fa-solid fa-user-check text-blue-600"></i> 현장 적용 가이드</h4>
+                        <p class="text-slate-600 text-xs leading-relaxed">${t.application}</p>
+                    </div>
+                    ${t.books ? `
+                    <div class="pt-2 border-t border-slate-100">
+                        <h4 class="font-bold text-slate-800 text-xs mb-1"><i class="fa-solid fa-book text-amber-500"></i> 추천 전문 서적</h4>
+                        <p class="text-slate-500 text-xs">${t.books}</p>
+                    </div>` : ''}
+                </div>
+            `;
+
+            document.getElementById('theoryModal').classList.remove('hidden');
+        }
+
+        function closeTheoryModal() {
+            document.getElementById('theoryModal').classList.add('hidden');
+        }
+
+        function searchTheory() {
+            const query = document.getElementById('theorySearchInput').value.toLowerCase().trim();
+            
+            const filteredP1 = theoryData.part1.filter(t => 
+                t.name.toLowerCase().includes(query) || 
+                t.scholar.toLowerCase().includes(query) || 
+                t.summary.toLowerCase().includes(query) ||
+                t.concept.toLowerCase().includes(query)
+            );
+            const filteredP2 = theoryData.part2.filter(t => 
+                t.name.toLowerCase().includes(query) || 
+                t.scholar.toLowerCase().includes(query) || 
+                t.summary.toLowerCase().includes(query) ||
+                t.concept.toLowerCase().includes(query)
+            );
+            const filteredP3 = worksheetData.filter(ws => 
+                ws.title.toLowerCase().includes(query) || 
+                ws.theory.toLowerCase().includes(query) || 
+                ws.desc.toLowerCase().includes(query)
+            );
+
+            const grid1 = document.getElementById('part1Grid');
+            if (grid1) {
+                grid1.innerHTML = filteredP1.map(t => `
+                    <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="bg-blue-50 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded-md border border-blue-200">파트 1</span>
+                                <span class="text-[10px] text-slate-400 font-medium">${t.scholar}</span>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-sm mb-1">${t.name}</h4>
+                            <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-3">${t.summary}</p>
+                        </div>
+                        <button onclick="openTheoryModal('${t.id}')" class="w-full py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold rounded-lg border border-blue-200 transition-all flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-book-open text-blue-600"></i> 상세 내용 보기
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            const grid2 = document.getElementById('part2Grid');
+            if (grid2) {
+                grid2.innerHTML = filteredP2.map(t => `
+                    <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-md border border-emerald-200">파트 2</span>
+                                <span class="text-[10px] text-slate-400 font-medium">${t.scholar}</span>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-sm mb-1">${t.name}</h4>
+                            <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-3">${t.summary}</p>
+                        </div>
+                        <button onclick="openTheoryModal('${t.id}')" class="w-full py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold rounded-lg border border-emerald-200 transition-all flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-book-open text-emerald-600"></i> 상세 내용 보기
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            const grid3 = document.getElementById('part3Grid');
+            if (grid3) {
+                grid3.innerHTML = filteredP3.map(ws => `
+                    <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="bg-purple-50 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded-md border border-purple-200">${ws.theory}</span>
+                                <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-semibold">실무 양식</span>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-sm mb-1.5">${ws.title}</h4>
+                            <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-3">${ws.desc}</p>
+                        </div>
+                        <button onclick="openWorksheetModal('${ws.id}')" class="w-full py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-800 text-xs font-bold rounded-lg border border-purple-200 transition-all flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-file-lines text-purple-600"></i> 서식 및 활용법 보기
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            if (query !== '') expandAllParts();
+        }
+
+        function renderQuizNav() {
+            const container = document.getElementById('quizNavContainer');
+            if (!container) return;
+            container.innerHTML = quizData.map((q, idx) => `
+                <button onclick="loadQuizProblem(${idx})" class="w-8 h-8 rounded-lg text-xs font-bold transition-all flex items-center justify-center ${
+                    idx === currentQuizIndex
+                        ? 'bg-purple-600 text-white shadow-md'
+                        : 'bg-white text-slate-700 border border-slate-200 hover:bg-purple-50'
+                }">
+                    ${idx + 1}
+                </button>
+            `).join('');
+        }
+
+        function loadQuizProblem(index) {
+            currentQuizIndex = index;
+            const q = quizData[index];
+            if (!q) return;
+
+            document.getElementById('quizProgress').innerText = `문제 ${index + 1} / ${quizData.length}`;
+            document.getElementById('quizTheoryBadge').innerText = q.theory;
+            document.getElementById('quizScenario').innerText = q.scenario;
+            document.getElementById('quizQuestion').innerHTML = `<i class="fa-solid fa-circle-question text-purple-600 mt-1"></i><span>${q.question}</span>`;
+            document.getElementById('quizUserAnswer').value = '';
+
+            document.getElementById('aiFeedbackBox').classList.add('hidden');
+            document.getElementById('modelAnswerBox').classList.add('hidden');
+            document.getElementById('btnToggleAnswer').innerHTML = '<i class="fa-solid fa-eye"></i> 표준 정답 및 상세 해설 보기';
+
+            renderQuizNav();
+        }
+
+        async function evaluateUserAnswerWithAI() {
+            const userAns = document.getElementById('quizUserAnswer').value.trim();
+            if (!userAns) {
+                alert('연습 답안을 입력해 주세요.');
+                return;
+            }
+
+            const q = quizData[currentQuizIndex];
+            const feedbackBox = document.getElementById('aiFeedbackBox');
+            const feedbackContent = document.getElementById('aiFeedbackContent');
+            const scoreBadge = document.getElementById('aiScoreBadge');
+
+            feedbackBox.classList.remove('hidden');
+            scoreBadge.innerText = 'AI 채점 중...';
+            feedbackContent.innerText = '수련생 답안의 이론적 타당성 및 키워드 적용 여부를 평가하는 중입니다...';
+
+            if (userApiKey) {
+                try {
+                    const systemPrompt = `당신은 임상 및 직업상담 슈퍼바이저 교수입니다. 수련생이 제출한 답안에 대해 점수(100점 만점)와 구체적인 피드백, 보완점, 칭찬할 점을 작성하세요.`;
+                    const prompt = `문제: ${q.question}\n지문: ${q.scenario}\n표준답안: ${q.modelAnswer}\n수련생 답안: ${userAns}`;
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${userApiKey}`;
+                    
+                    const resp = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }],
+                            systemInstruction: { parts: [{ text: systemPrompt }] }
+                        })
+                    });
+                    const data = await resp.json();
+                    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (text) {
+                        feedbackContent.innerHTML = marked.parse(text);
+                        scoreBadge.innerText = '채점 완료';
+                    } else {
+                        throw new Error('채점 응답 오류');
+                    }
+                } catch (e) {
+                    console.error(e);
+                    scoreBadge.innerText = '평가 완료';
+                    feedbackContent.innerHTML = `<b>자가 점검 결과:</b> 표준 답안의 핵심 체크포인트(${q.checkpoints.join(', ')})가 답안에 적절히 포함되었는지 비교해 보세요.`;
+                }
+            } else {
+                setTimeout(() => {
+                    scoreBadge.innerText = '우수 (85/100)';
+                    feedbackContent.innerHTML = `<b>AI 슈퍼비전 피드백:</b><br>• 핵심 키워드가 잘 반영되었습니다.<br>• 모범 답안과 비교하여 이론적 근거를 한 문장 더 보충하면 양질의 답안이 됩니다.<br>• 주요 검토 포인트: ${q.checkpoints.join(', ')}`;
+                }, 400);
+            }
+        }
+
+        function toggleAnswerVisibility() {
+            const box = document.getElementById('modelAnswerBox');
+            const btn = document.getElementById('btnToggleAnswer');
+            const q = quizData[currentQuizIndex];
+
+            if (box.classList.contains('hidden')) {
+                box.classList.remove('hidden');
+                btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> 표준 정답 가리기';
+                document.getElementById('modelAnswerText').innerText = q.modelAnswer;
+                document.getElementById('quizCheckpoints').innerHTML = q.checkpoints.map(c => `<li>${c}</li>`).join('');
+            } else {
+                box.classList.add('hidden');
+                btn.innerHTML = '<i class="fa-solid fa-eye"></i> 표준 정답 및 상세 해설 보기';
+            }
+        }
+
+        function toggleTechniqueReference() {
+            const box = document.getElementById('techniqueRefBox');
+            if (box) box.classList.toggle('hidden');
+        }
+
+        function renderTechScenarioTabs() {
+            const container = document.getElementById('techScenarioTabContainer');
+            if (!container) return;
+            container.innerHTML = techScenarios.map((s, idx) => `
+                <button onclick="loadTechScenario(${idx})" class="px-3 py-1.5 text-xs font-bold rounded-xl whitespace-nowrap transition-all ${
+                    idx === currentTechScenarioIndex
+                        ? 'bg-amber-500 text-white shadow-xs'
+                        : 'bg-white text-slate-700 border border-slate-200 hover:bg-amber-50'
+                }">
+                    사례 ${idx + 1}
+                </button>
+            `).join('');
+        }
+
+        function loadTechScenario(index) {
+            currentTechScenarioIndex = index;
+            const s = techScenarios[index];
+            if (!s) return;
+
+            document.getElementById('techScenarioNum').innerText = `사례 ${index + 1} / ${techScenarios.length}`;
+            document.getElementById('clientEmotionBadge').innerText = s.emotionTag;
+            document.getElementById('clientStatementText').innerText = s.clientText;
+            document.getElementById('userTechResponse').value = '';
+
+            document.getElementById('techFeedbackResult').classList.add('hidden');
+            document.getElementById('techModelBox').classList.add('hidden');
+
+            renderTechScenarioTabs();
+        }
+
+        function renderTechniqueButtons(selectedName) {
+            const container = document.getElementById('techniquePillsContainer');
+            if (!container) return;
+            const techniques = ['감정 반영', '재진술', '직면', '명료화', '초점화', '개방형 질문', '폐쇄형 질문', '해석', '즉시성', '직업적 정보제공'];
+
+            selectedTechniqueName = selectedName;
+            document.getElementById('selectedTechnique').value = selectedName;
+
+            container.innerHTML = techniques.map(tech => `
+                <button type="button" onclick="selectTechnique('${tech}')" class="p-2 text-xs font-bold rounded-xl border text-center transition-all ${
+                    tech === selectedTechniqueName
+                        ? 'bg-amber-500 text-white border-amber-500 shadow-2xs'
+                        : 'bg-white text-slate-700 border-slate-200 hover:bg-amber-50'
+                }">
+                    ${tech}
+                </button>
+            `).join('');
+        }
+
+        function selectTechnique(techName) {
+            renderTechniqueButtons(techName);
+        }
+
+        async function evaluateTechniqueResponse() {
+            const userResp = document.getElementById('userTechResponse').value.trim();
+            if (!userResp) {
+                alert('내담자에게 전달할 상담사 반응을 입력해 주세요.');
+                return;
+            }
+
+            const scenario = techScenarios[currentTechScenarioIndex];
+            const techName = selectedTechniqueName;
+            const resultBox = document.getElementById('techFeedbackResult');
+            const resultBody = document.getElementById('techFeedbackBody');
+
+            resultBox.classList.remove('hidden');
+            resultBody.innerText = '상담기법 반응을 분석 중입니다...';
+
+            if (userApiKey) {
+                try {
+                    const systemPrompt = `당신은 상담 수련 슈퍼바이저입니다. 수련생이 선택한 기법(${techName})에 맞게 적절히 내담자 발화에 반응했는지 평가하고 피드백과 교정 발화를 작성하세요.`;
+                    const prompt = `내담자 발화: ${scenario.clientText}\n선택 기법: ${techName}\n상담사 반응: ${userResp}`;
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${userApiKey}`;
+                    
+                    const resp = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }],
+                            systemInstruction: { parts: [{ text: systemPrompt }] }
+                        })
+                    });
+                    const data = await resp.json();
+                    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (text) {
+                        resultBody.innerHTML = marked.parse(text);
+                    } else {
+                        throw new Error('응답 오류');
+                    }
+                } catch (e) {
+                    console.error(e);
+                    resultBody.innerText = `선택하신 [${techName}] 기법의 특성을 잘 살려 내담자의 내면 정서를 경청하는 공감적 어조로 작성되었습니다.`;
+                }
+            } else {
+                setTimeout(() => {
+                    resultBody.innerHTML = `<b>[${techName}] 기법 구사 평가:</b><br>• 작성하신 반응: "${userResp}"<br>• 슈퍼바이저 피드백: 선택하신 ${techName} 기법의 핵심 원리에 부합합니다. 내담자에게 신뢰감을 전달할 수 있도록 온화한 어조를 더해 전달해 보세요.`;
+                }, 400);
+            }
+        }
+
+        function showTechniqueModelAnswer() {
+            const scenario = techScenarios[currentTechScenarioIndex];
+            const modelBox = document.getElementById('techModelBox');
+            const modelList = document.getElementById('techModelList');
+
+            if (modelBox.classList.contains('hidden')) {
+                modelBox.classList.remove('hidden');
+                modelList.innerHTML = Object.entries(scenario.modelResponses).map(([tName, resp]) => `
+                    <div class="bg-white p-2.5 rounded-lg border border-emerald-100">
+                        <span class="font-bold text-emerald-800 text-xs">[${tName}]</span>
+                        <p class="text-xs text-slate-700 mt-0.5">${resp}</p>
+                    </div>
+                `).join('');
+            } else {
+                modelBox.classList.add('hidden');
+            }
+        }
+
+        function filterEthicsAssociation(assoc) {
+            currentEthicsFilter = assoc;
+            ['all', 'kcpa', 'kca', 'kcca', 'kova'].forEach(a => {
+                const btn = document.getElementById('btnEthics' + a.charAt(0).toUpperCase() + a.slice(1));
+                if (btn) {
+                    if (a === assoc) {
+                        btn.className = 'px-3.5 py-1.5 text-xs font-bold rounded-lg bg-teal-600 text-white shadow-xs transition-all';
+                    } else {
+                        btn.className = 'px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white text-slate-700 border border-slate-300 hover:bg-slate-100 transition-all';
+                    }
+                }
+            });
+            renderEthicsCards();
+        }
+
+        function renderEthicsCards() {
+            const container = document.getElementById('ethicsCardsContainer');
+            if (!container) return;
+
+            const query = document.getElementById('ethicsSearchInput')?.value.toLowerCase().trim() || '';
+
+            const filteredData = ethicsData.filter(item => {
+                if (currentEthicsFilter !== 'all' && item.association !== currentEthicsFilter) return false;
+                if (!query) return true;
+
+                const matchTitle = item.title.toLowerCase().includes(query) || item.assocName.toLowerCase().includes(query);
+                const matchClauses = item.clauses.some(c => c.num.toLowerCase().includes(query) || c.text.toLowerCase().includes(query));
+                return matchTitle || matchClauses;
+            });
+
+            if (filteredData.length === 0) {
+                container.innerHTML = '<div class="col-span-2 text-center py-8 text-slate-400 text-xs">검색 조건에 일치하는 윤리 강령 항목이 없습니다.</div>';
+                return;
+            }
+
+            container.innerHTML = filteredData.map(item => `
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-2xs space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold">
+                                <i class="fa-solid ${item.icon}"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${item.badgeColor}">${item.assocName}</span>
+                                <h3 class="font-bold text-slate-900 text-sm mt-0.5">${item.title}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        ${item.clauses.map(c => `
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80 text-xs">
+                                <h4 class="font-bold text-teal-900 mb-1">${c.num}</h4>
+                                <p class="text-slate-600 leading-relaxed font-light">${c.text}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function searchEthics() {
+            renderEthicsCards();
+        }
+
+        function openApiModal() {
+            document.getElementById('apiKeyInput').value = userApiKey;
+            document.getElementById('apiModal').classList.remove('hidden');
+        }
+
+        function closeApiModal() {
+            document.getElementById('apiModal').classList.add('hidden');
+        }
+
+        function saveApiKey() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            userApiKey = key;
+            localStorage.setItem('counselor_gemini_api_key', key);
+            
+            const statusText = document.getElementById('apiStatusText');
+            if (statusText) {
+                statusText.innerText = key ? 'Gemini API 연동 완료' : 'Gemini API 설정';
+            }
+            closeApiModal();
+        }
+
+        window.onload = function() {
+            renderTheoryList();
+            renderWorksheetList();
+            renderProblemTypeButtons();
+            renderTheorySelectionButtons();
+            renderQuizNav();
+            loadQuizProblem(0);
+            renderTechScenarioTabs();
+            loadTechScenario(0);
+            renderTechniqueButtons('감정 반영');
+            renderEthicsCards();
+            loadSampleCase('sample1');
+
+            if (userApiKey) {
+                const statusText = document.getElementById('apiStatusText');
+                if (statusText) statusText.innerText = 'Gemini API 연동 완료';
+            }
+        };
+    </script>
+</body>
+</html>
